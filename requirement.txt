@@ -1,0 +1,9 @@
+transformers
+torch
+umap-learn
+joblib
+sklearn
+gensim
+PyPDF2
+pandas
+nltk
