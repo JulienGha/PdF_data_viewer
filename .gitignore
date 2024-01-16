@@ -1,3 +1,6 @@
 env/
-data/*
-models/*
+data/raw/*
+data/pdf/*
+models/bert/*
+models/tfidf/*
+models/doc2vec/*

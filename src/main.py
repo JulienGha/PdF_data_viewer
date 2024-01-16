@@ -1,9 +1,13 @@
 import json
+from gensim.models import Doc2Vec
+from transformers import BertTokenizer, BertModel
 from pdf_converter import convert_pdf_into_json
 from preprocess import preprocess_data_pdf_to_json, load_data
 from doc2vec import train_doc2vec
 from bert import train_bert_model
 from tfidf import train_tfidf
+from displayer import generate_graph
+import joblib
 import os
 
 
@@ -163,23 +167,17 @@ def main(files):
     else:
         documents = [" ".join(doc["words"]) for doc in list_doc]
 
-    # User input for retrieval
-    while True:
-        query = input("Enter your query (or 'exit' to quit): ").strip()
+    if model_choice == "doc":
+        doc_vectors = Doc2Vec.load("../models/doc2vec/doc2vec_model.bin")
+        generate_graph(doc_vectors, documents)
 
-        if query.lower() == 'exit':
-            break
+    elif model_choice == "bert":
+        doc_vectors = joblib.load('../models/bert/doc_vectors.pkl')
+        generate_graph(doc_vectors, documents)
 
-
-        if model_choice == "doc":
-            print()
-
-        elif model_choice == "bert":
-            print()
-
-        elif model_choice == "tfidf":
-            print()
-
+    elif model_choice == "tfidf":
+        doc_vectors = joblib.load('../models/tfidf/doc_vectors.pkl')
+        generate_graph(doc_vectors, documents)
 
 
 if __name__ == "__main__":
