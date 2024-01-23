@@ -4,7 +4,7 @@ import PyPDF2
 
 def convert_pdf_into_json(file):
     # Open the PDF file in input
-    pdf = open('../data/pdf/' + file + '.pdf', "rb")
+    pdf = open('../data/pdf/' + file, "rb")
 
     # Create a PDF reader object
     reader = PyPDF2.PdfReader(pdf)
@@ -35,7 +35,7 @@ def convert_pdf_into_json(file):
     # Add here a function that allows to choose the splitter size
 
     # Create a JSON object from the list of lists of strings
-    json_object = json.dumps(whole_text)
+    json_object = json.dumps([whole_text])
 
     # Save the JSON object to a file
     with open('../data/raw/' + file + '.json', 'w') as f:

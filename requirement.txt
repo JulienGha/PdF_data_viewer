@@ -2,8 +2,10 @@ transformers
 torch
 umap-learn
 joblib
-sklearn
+scikit-learn
 gensim
 PyPDF2
 pandas
 nltk
+matplotlib
+torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
