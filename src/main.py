@@ -1,11 +1,8 @@
 import json
-from gensim.models import Doc2Vec
 from transformers import BertTokenizer, BertModel
 from pdf_converter import convert_pdf_into_json
 from preprocess import preprocess_data_pdf_to_json, load_data
-from doc2vec import train_doc2vec
 from bert import train_bert_model
-from tfidf import train_tfidf
 from displayer import generate_graph
 import joblib
 import os
@@ -33,151 +30,55 @@ def main(files):
 
             # Convert the preprocessed data into a format compatible with the retrieve function
             # Join the words in the TaggedDocument to form the full text of the document
-            model_choice = ""
 
-            while model_choice not in ["doc", "bert", "tfidf"]:
-                model_choice = input("Do you want doc2vec, BERT or tfidf? (doc/bert/tfidf): ").strip().lower()
 
-                if model_choice == "doc":
-                    print("Training model...")
+            print("Training model...")
 
-                    # Create the directory if it doesn't exist
-                    os.makedirs('../models/doc2vec', exist_ok=True)
+            # Create the directory if it doesn't exist
+            os.makedirs('../models/bert', exist_ok=True)
 
-                    # Train the Doc2Vec model
-                    train_doc2vec(list_doc)
+            # Train the BERT model and get encoded documents
+            documents = [" ".join(doc.words) for doc in list_doc]
+            train_bert_model(documents)
 
-                    # Save docs for future use
-                    with open('../models/doc2vec/last_file.json', "w") as file_p:
-                        json.dump([{"words": doc.words, "tags": doc.tags} for doc in list_doc], file_p)
+            # Save docs for future use
+            with open('../models/bert/last_file.json', "w") as file_p:
+                json.dump([{"words": doc.words, "tags": doc.tags} for doc in list_doc], file_p)
 
-                    print("Model trained")
-
-                elif model_choice == "bert":
-                    print("Training model...")
-
-                    # Create the directory if it doesn't exist
-                    os.makedirs('../models/bert', exist_ok=True)
-
-                    # Train the BERT model and get encoded documents
-                    documents = [" ".join(doc.words) for doc in list_doc]
-                    train_bert_model(documents)
-
-                    # Save docs for future use
-                    with open('../models/bert/last_file.json', "w") as file_p:
-                        json.dump([{"words": doc.words, "tags": doc.tags} for doc in list_doc], file_p)
-
-                    print("Model trained")
-
-                elif model_choice == "tfidf":
-                    print("Training model...")
-
-                    # Create the directory if it doesn't exist
-                    os.makedirs('../models/tfidf', exist_ok=True)
-
-                    train_tfidf(list_doc)
-
-                    # Save the model for future use
-                    with open('../models/tfidf/last_file.json', "w") as file_p:
-                        json.dump([{"words": doc.words, "tags": doc.tags} for doc in list_doc], file_p)
-
-                    print("Model trained")
+            print("Model trained")
 
         elif train_new_model == "no":
-            model_choice = ""
 
-            while model_choice not in ["doc", "bert", "tfidf"]:
-                model_choice = input(
-                    "Do you want to load doc2vec, BERT or tfidf? (doc/bert/tfidf): ").strip().lower()
-
-                if model_choice == "doc":
-                    print("Loading model...")
-                    if os.path.exists('../models/doc2vec/last_file.json'):
-                        # Load an existing model
-                        with open('../models/doc2vec/last_file.json', 'r') as file:
-                            list_doc = json.load(file)
-                    else:
-                        print("This model doesn't exist, please train a new one.")
-                        break
-                    print("Model loaded")
-
-                elif model_choice == "bert":
-                    print("Loading model...")
-                    if os.path.exists('../models/bert/last_file.json'):
-                        # Load an existing model
-                        with open('../models/bert/last_file.json', 'r') as file:
-                            list_doc = json.load(file)
-                    else:
-                        print("This model doesn't exist, please train a new one.")
-                        break
-                    print("Model loaded")
-
-                elif model_choice == "tfidf":
-                    if os.path.exists('../models/tfidf/last_file.json'):
-                        # Load an existing model
-                        with open('../models/tfidf/last_file.json', 'r') as file:
-                            list_doc = json.load(file)
-                    else:
-                        print("This model doesn't exist, please train a new one.")
-                        break
-                    print("Model loaded")
+            print("Loading model...")
+            if os.path.exists('../models/bert/last_file.json'):
+                # Load an existing model
+                with open('../models/bert/last_file.json', 'r') as file:
+                    list_doc = json.load(file)
+            else:
+                print("This model doesn't exist, please train a new one.")
+                return 1
+            print("Model loaded")
 
     else:
-        model_choice = ""
 
-        while model_choice not in ["doc", "bert", "tfidf"]:
-            model_choice = input("No file in input, going directly into loading. "
-                                 "Do you want to load doc2vec, BERT or tfidf? (doc/bert/tfidf): ").strip().lower()
-
-            if model_choice == "doc":
-                print("Loading model...")
-                if os.path.exists('../models/doc2vec/last_file.json'):
-                    # Load an existing model
-                    with open('../models/doc2vec/last_file.json', 'r') as file:
-                        list_doc = json.load(file)
-                else:
-                    print("This model doesn't exist, please train a new one.")
-                    break
-                print("Model loaded")
-
-            elif model_choice == "bert":
-                print("Loading model...")
-                if os.path.exists('../models/bert/last_file.json'):
-                    # Load an existing model
-                    with open('../models/bert/last_file.json', 'r') as file:
-                        list_doc = json.load(file)
-                else:
-                    print("This model doesn't exist, please train a new one.")
-                    break
-                print("Model loaded")
-
-            elif model_choice == "tfidf":
-                print("Loading Model...")
-                if os.path.exists('../models/tfidf/last_file.json'):
-                    # Load an existing model
-                    with open('../models/tfidf/last_file.json', 'r') as file:
-                        list_doc = json.load(file)
-                else:
-                    print("This model doesn't exist, please train a new one.")
-                    break
-                print("Model loaded")
+        print("No file in input, going directly into loading. ")
+        print("Loading model...")
+        if os.path.exists('../models/bert/last_file.json'):
+            # Load an existing model
+            with open('../models/bert/last_file.json', 'r') as file:
+                list_doc = json.load(file)
+        else:
+            print("This model doesn't exist, please train a new one.")
+            return 1
+        print("Model loaded")
 
     if train_new_model == "yes":
         documents = [" ".join(doc.words) for doc in list_doc]
     else:
         documents = [" ".join(doc["words"]) for doc in list_doc]
 
-    if model_choice == "doc":
-        doc_vectors = Doc2Vec.load("../models/doc2vec/doc2vec_model.bin")
-        generate_graph(doc_vectors, documents)
-
-    elif model_choice == "bert":
-        doc_vectors = joblib.load('../models/bert/doc_vectors.pkl')
-        generate_graph(doc_vectors, documents)
-
-    elif model_choice == "tfidf":
-        doc_vectors = joblib.load('../models/tfidf/doc_vectors.pkl')
-        generate_graph(doc_vectors, documents)
+    doc_vectors = joblib.load('../models/bert/doc_vectors.pkl')
+    generate_graph(doc_vectors, documents)
 
 
 if __name__ == "__main__":
