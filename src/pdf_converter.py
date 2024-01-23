@@ -35,7 +35,7 @@ def convert_pdf_into_json(file):
     # Add here a function that allows to choose the splitter size
 
     # Create a JSON object from the list of lists of strings
-    json_object = json.dumps([whole_text])
+    json_object = json.dumps(text)
 
     # Save the JSON object to a file
     with open('../data/raw/' + file + '.json', 'w') as f:

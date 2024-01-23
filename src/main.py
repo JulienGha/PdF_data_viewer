@@ -29,7 +29,8 @@ def main(pdf_directory):
                     file_path = os.path.join(pdf_directory, filename)
                     list_files.append(file_path)
                     convert_pdf_into_json(filename)
-                    processed_docs = preprocess_data_pdf_to_json(load_data('../data/raw/' + filename + '.json'), filename)
+                    processed_docs = preprocess_data_pdf_to_json(load_data('../data/raw/' + filename + '.json'),
+                                                                 filename)
                     list_doc.extend(processed_docs)
 
             print("Files processed...")

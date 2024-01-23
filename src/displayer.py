@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import umap
 import pandas as pd
 import json
 import pickle
+import hdbscan
 
 
 # Function to load the BERT model's encoded documents
@@ -37,16 +37,24 @@ def generate_graph():
     reducer = umap.UMAP(n_neighbors=min(45, len(encoded_docs) - 1), n_components=2, min_dist=0.1, metric='cosine')
     umap_embeddings = reducer.fit_transform(encoded_docs)
 
-    # create a new dataframe with the UMAP embeddings and subreddit column
+    # Create a new dataframe with the UMAP embeddings and subreddit column
     umap_df = pd.DataFrame(umap_embeddings, columns=['umap_1', 'umap_2'])
-
     umap_df['words'] = df['words']
     umap_df['tags'] = df['tags']
 
-    # plot the UMAP embeddings with colors based on subreddit
-    plt.scatter(umap_df['umap_1'], umap_df['umap_2'], s=0.05)
-    plt.title('Representation of documents in 2 dimensions')
+    # Use HDBSCAN to cluster the UMAP embeddings
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=15, min_samples=1)
+    umap_df['cluster'] = clusterer.fit_predict(umap_embeddings)
+
+    # Save the data to a CSV file ordered by clusters
+    csv_path = "../models/bert/umap_clusters.csv"
+    umap_df_sorted = umap_df.sort_values(by='cluster')  # Sort by cluster
+    umap_df_sorted.to_csv(csv_path, index=False)
+
+    # Plot the UMAP embeddings with colors based on clusters
+    plt.scatter(umap_df['umap_1'], umap_df['umap_2'], c=umap_df['cluster'], cmap='viridis', s=20, alpha=0.8)
+    plt.title('Representation of documents in 2 dimensions with HDBSCAN clusters')
     plt.xlabel('x')
     plt.ylabel('y')
+    plt.colorbar()
     plt.show()
-
