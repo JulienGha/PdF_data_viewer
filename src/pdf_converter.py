@@ -1,5 +1,4 @@
 import json
-import csv
 import PyPDF2
 
 
@@ -41,22 +40,3 @@ def convert_pdf_into_json(file):
     # Save the JSON object to a file
     with open('../data/raw/' + file + '.json', 'w') as f:
         f.write(json_object)
-
-
-def turn_json_into_csv(file, output="default.csv"):
-    # Load JSON data
-    with open(file) as f:
-        data = json.load(f)
-
-    # Assuming JSON is a list of dictionaries
-    keys = data[0].keys()
-
-    # Write CSV data
-    with open(output, mode='w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=keys)
-        writer.writeheader()
-        for row in data:
-            writer.writerow(row)
-
-
-
