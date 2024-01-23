@@ -4,6 +4,10 @@ import pandas as pd
 import json
 import pickle
 import hdbscan
+from collections import Counter
+from nltk.corpus import stopwords
+import string
+
 
 
 # Function to load the BERT model's encoded documents
@@ -58,3 +62,37 @@ def generate_graph():
     plt.ylabel('y')
     plt.colorbar()
     plt.show()
+
+
+def extract_cluster_themes():
+
+    # Load the BERT model's encoded documents
+    encoded_docs = load_bert_model()
+
+    # Use HDBSCAN to cluster the UMAP embeddings
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=15, min_samples=1)
+    clusters = clusterer.fit_predict(encoded_docs)
+
+    # Load the original documents
+    with open('../models/bert/last_file.json', 'r') as file:
+        documents = json.load(file)
+
+    # Create a DataFrame with document text and assigned clusters
+    df = pd.DataFrame({'text': [data["words"] for data in documents], 'cluster': clusters})
+
+    # Extract themes for each cluster excluding stop words and punctuation
+    cluster_themes = {}
+    stop_words = set(stopwords.words('english'))
+    punctuation = set(string.punctuation)
+
+    for cluster_id in df['cluster'].unique():
+        cluster_texts = df[df['cluster'] == cluster_id]['text']
+        flattened_texts = [word.lower() for sublist in cluster_texts for word in sublist
+                           if word.lower() not in stop_words and word not in punctuation and len(word) > 3]
+        cluster_word_counts = Counter(flattened_texts)
+        most_common_words = cluster_word_counts.most_common(30)
+        cluster_themes[cluster_id] = most_common_words
+
+    # Print or use cluster themes as needed
+    for cluster_id, theme in cluster_themes.items():
+        print(f"Cluster {cluster_id} Theme: {theme}")
