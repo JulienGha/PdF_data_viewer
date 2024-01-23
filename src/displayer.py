@@ -2,48 +2,51 @@ import matplotlib.pyplot as plt
 import numpy as np
 import umap
 import pandas as pd
+import json
+import pickle
 
 
-def generate_graph(vectors, documents):
+# Function to load the BERT model's encoded documents
+def load_bert_model(path="../models/bert/bert_model.pkl"):
+    with open(path, "rb") as f:
+        encoded_docs = pickle.load(f)
+    return encoded_docs
+
+
+def generate_graph():
 
     # create a list to store the selftext and subreddit values
-    selftext_list = []
-    subreddit_list = []
+    words_list = []
+    tags_list = []
+
+    with open('../models/bert/last_file.json', 'r') as file:
+        documents = json.load(file)
 
     # iterate over the posts and extract the selftext and subreddit values
     for data in documents:
-        selftext_list.append()
-        subreddit_list.append(data['subreddit'])
-
+        words_list.append(data["words"])
+        tags_list.append(data['tags'])
 
     # create a dataframe from the selftext and subreddit lists
-    df = pd.DataFrame({'selftext': selftext_list, 'subreddit': subreddit_list})
+    df = pd.DataFrame({'words': words_list, 'tags': tags_list})
 
-    encoded_docs = np.array(encoded_docs)
+    # Load the BERT model's encoded documents
+    encoded_docs = load_bert_model()
 
     # Create UMAP embeddings for the documents
-    reducer = umap.UMAP(n_neighbors=45, n_components=2, min_dist=0.1, metric='cosine')
+    reducer = umap.UMAP(n_neighbors=min(45, len(encoded_docs) - 1), n_components=2, min_dist=0.1, metric='cosine')
     umap_embeddings = reducer.fit_transform(encoded_docs)
-
-    # fit the vectorizer to the post text and transform the data
-    text_data = df['selftext']
-    X = vectorizer.fit_transform(text_data)
-
-    # create UMAP embeddings for the posts
-    umap_embeddings = umap.UMAP(n_neighbors=45,
-                                n_components=2,  # reduce to 2 dimensions for visualization
-                                min_dist=0.1,
-                                metric='cosine').fit_transform(X)
 
     # create a new dataframe with the UMAP embeddings and subreddit column
     umap_df = pd.DataFrame(umap_embeddings, columns=['umap_1', 'umap_2'])
 
-    umap_df['subreddit'] = df['subreddit']
-    umap_df['selftext'] = df['selftext']
+    umap_df['words'] = df['words']
+    umap_df['tags'] = df['tags']
 
     # plot the UMAP embeddings with colors based on subreddit
     plt.scatter(umap_df['umap_1'], umap_df['umap_2'], s=0.05)
-    plt.title('Representation of documents in 2 dimension')
+    plt.title('Representation of documents in 2 dimensions')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
+
