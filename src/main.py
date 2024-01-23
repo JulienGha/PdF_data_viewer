@@ -2,7 +2,7 @@ import json
 from pdf_converter import convert_pdf_into_json
 from preprocess import preprocess_data_pdf_to_json, load_data
 from bert import train_bert_model
-from displayer import generate_graph
+from displayer import generate_graph, extract_cluster_themes
 import os
 
 
@@ -50,12 +50,14 @@ def main(pdf_directory):
 
             print("Model trained")
             generate_graph()
+            extract_cluster_themes()
 
         elif train_new_model == "no":
 
             print("Loading model...")
             if os.path.exists('../models/bert/last_file.json') and os.path.exists('../models/bert/bert_model.pkl'):
                 generate_graph()
+                extract_cluster_themes()
 
 
 if __name__ == "__main__":
