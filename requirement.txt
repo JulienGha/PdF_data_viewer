@@ -1,3 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
 transformers
 torch
 umap-learn
@@ -8,4 +9,6 @@ PyPDF2
 pandas
 nltk
 matplotlib
-torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
+torch==2.1.1+cu118
+torchvision==0.16.1+cu118
+torchaudio==2.1.1+cu118
