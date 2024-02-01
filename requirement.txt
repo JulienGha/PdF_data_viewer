@@ -1,14 +1,15 @@
 --extra-index-url https://download.pytorch.org/whl/cu118
-transformers
-torch
-umap-learn
-joblib
-scikit-learn
-gensim
-PyPDF2
-pandas
-nltk
-matplotlib
+transformers==4.37.0
+umap-learn==0.5.5
+joblib==1.3.2
+scikit-learn==1.4.0
+gensim==4.3.2
+PyPDF2==3.0.1
+pandas==2.2.0
+nltk==3.8.1
+matplotlib==3.8.2
+hdbscan==0.8.33
+safetensors==0.4.1
 torch==2.1.1+cu118
 torchvision==0.16.1+cu118
 torchaudio==2.1.1+cu118
