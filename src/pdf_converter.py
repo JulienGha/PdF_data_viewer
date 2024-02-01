@@ -19,24 +19,15 @@ def convert_pdf_into_json(file):
     for i in range(num_pages):
         # Get the text from the current page
         page = reader.pages[i]
-        text.append(page.extract_text())
+        content = page.extract_text()
+        text.append(content.replace("\n", ""))
 
     # Close the PDF file
     pdf.close()
-
-    whole_text = ""
-
-    # Split the text into lists of strings
-    for i in range(num_pages):
-        whole_text += text[i]
-
-    whole_text = whole_text.replace("\n", "")
-
-    # Add here a function that allows to choose the splitter size
 
     # Create a JSON object from the list of lists of strings
     json_object = json.dumps(text)
 
     # Save the JSON object to a file
-    with open('../data/raw/' + file + '.json', 'w') as f:
+    with open('../data/raw/' + file.replace(".pdf", "") + '.json', 'w') as f:
         f.write(json_object)

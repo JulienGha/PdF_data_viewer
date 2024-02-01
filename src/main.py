@@ -29,9 +29,10 @@ def main(pdf_directory):
                     file_path = os.path.join(pdf_directory, filename)
                     list_files.append(file_path)
                     convert_pdf_into_json(filename)
+                    filename = filename.replace(".pdf", "")
                     processed_docs = preprocess_data_pdf_to_json(load_data('../data/raw/' + filename + '.json'),
                                                                  filename)
-                    list_doc.extend(processed_docs)
+                    list_doc.append(processed_docs)
 
             print("Files processed...")
 
@@ -41,16 +42,19 @@ def main(pdf_directory):
             print("Training model...")
 
             # Train the BERT model and get encoded documents
-            documents = [" ".join(doc.words) for doc in list_doc]
-            train_bert_model(documents)
+            documents = [(subdoc["words"]) for doc in list_doc for subdoc in doc["content"]]
+
+            print(documents)
+
+            """train_bert_model(documents)
 
             # Save docs for future use
             with open('../models/bert/last_file.json', "w") as file_p:
-                json.dump([{"words": doc.words, "tags": doc.tags} for doc in list_doc], file_p)
+                json.dump(list_doc, file_p)
 
             print("Model trained")
             generate_graph()
-            extract_cluster_themes()
+            extract_cluster_themes()"""
 
         elif train_new_model == "no":
 
