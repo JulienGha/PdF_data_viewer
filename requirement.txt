@@ -13,3 +13,4 @@ safetensors==0.4.1
 torch==2.1.1+cu118
 torchvision==0.16.1+cu118
 torchaudio==2.1.1+cu118
+plotly==5.18.0
