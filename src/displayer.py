@@ -48,8 +48,9 @@ def generate_graph_3d():
     umap_df['order'] = df['order']
     umap_df['document'] = df['document']
 
-    # Use HDBSCAN to cluster the UMAP embeddings (considering only umap_1 and umap_2)
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=15, min_samples=1)
+    # Use HDBSCAN to cluster the UMAP embeddings (considering only umap_1 and umap_2), change min_cluster_size
+    # to have more clusters
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=5, min_samples=1)
     umap_df['cluster'] = clusterer.fit_predict(umap_df[['umap_1', 'umap_2']])
 
     # Save the data to a CSV file ordered by clusters
