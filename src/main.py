@@ -2,7 +2,7 @@ import json
 from pdf_converter import convert_pdf_into_json
 from preprocess import preprocess_data_pdf_to_json, load_data
 from bert import train_bert_model
-from displayer import generate_graph, extract_cluster_themes
+from displayer import generate_graph_3d, extract_cluster_themes
 import os
 
 
@@ -44,23 +44,21 @@ def main(pdf_directory):
             # Train the BERT model and get encoded documents
             documents = [(subdoc["words"]) for doc in list_doc for subdoc in doc["content"]]
 
-            print(documents)
-
-            """train_bert_model(documents)
+            train_bert_model(documents)
 
             # Save docs for future use
             with open('../models/bert/last_file.json', "w") as file_p:
                 json.dump(list_doc, file_p)
 
             print("Model trained")
-            generate_graph()
-            extract_cluster_themes()"""
+            generate_graph_3d()
+            extract_cluster_themes()
 
         elif train_new_model == "no":
 
             print("Loading model...")
             if os.path.exists('../models/bert/last_file.json') and os.path.exists('../models/bert/bert_model.pkl'):
-                generate_graph()
+                generate_graph_3d()
                 extract_cluster_themes()
 
 
