@@ -7,9 +7,8 @@ def preprocess_data_pdf_to_json(documents, document_name="default"):
         "content": []
     }
     for i, entry in enumerate(documents):
-        if len(entry) > 50:
-            subdocument = {"words": entry, "order": i}
-            data["content"].append(subdocument)
+        subdocument = {"words": entry, "order": i}
+        data["content"].append(subdocument)
 
     return data
 
