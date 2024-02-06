@@ -68,4 +68,14 @@ def main(pdf_directory, clusters_size=5, context_size=200):
 
 if __name__ == "__main__":
     pdf_directory = "../data/pdf"  # Specify the directory containing PDF files
-    main(pdf_directory, 5, 200)
+    # Prompt the user for input until valid numbers are entered
+    while True:
+        try:
+            cluster_size = int(input("Enter the minimum of element per cluster, lowest number means more clusters: "))
+            context_size = int(input("Enter the amount of words per context, low numbers means more element on z: "))
+            break  # Exit the loop if both inputs are valid numbers
+        except ValueError:
+            print("Please enter valid numeric values.")
+
+    # Call the main function with user-input values
+    main(pdf_directory, cluster_size, context_size)
