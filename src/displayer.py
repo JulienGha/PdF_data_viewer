@@ -17,8 +17,7 @@ def load_bert_model(path="../models/bert/bert_model.pkl"):
     return encoded_docs
 
 
-
-def generate_graph_3d():
+def generate_graph_3d(size_clusters):
     words_list = []
     order_list = []
     doc_list = []
@@ -50,7 +49,7 @@ def generate_graph_3d():
 
     # Use HDBSCAN to cluster the UMAP embeddings (considering only umap_1 and umap_2), change min_cluster_size
     # to have more clusters
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=5, min_samples=1)
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=size_clusters, min_samples=1)
     umap_df['cluster'] = clusterer.fit_predict(umap_df[['umap_1', 'umap_2']])
 
     # Save the data to a CSV file ordered by clusters

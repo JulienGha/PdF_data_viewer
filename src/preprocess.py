@@ -1,6 +1,4 @@
 import json
-from nltk.tokenize import word_tokenize
-from gensim.models.doc2vec import TaggedDocument
 
 
 def preprocess_data_pdf_to_json(documents, document_name="default"):
@@ -10,7 +8,6 @@ def preprocess_data_pdf_to_json(documents, document_name="default"):
     }
     for i, entry in enumerate(documents):
         if len(entry) > 50:
-            text = entry
             subdocument = {"words": entry, "order": i}
             data["content"].append(subdocument)
 
