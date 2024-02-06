@@ -6,7 +6,7 @@ from displayer import generate_graph_3d, extract_cluster_themes
 import os
 
 
-def main(pdf_directory):
+def main(pdf_directory, clusters_size=5, context_size=200):
     train_new_model = ""
     if not os.path.exists('../data/raw'):
         os.makedirs('../data/raw')
@@ -28,7 +28,7 @@ def main(pdf_directory):
                 if filename.endswith(".pdf"):
                     file_path = os.path.join(pdf_directory, filename)
                     list_files.append(file_path)
-                    convert_pdf_into_json(filename)
+                    convert_pdf_into_json(filename, context_size)
                     filename = filename.replace(".pdf", "")
                     processed_docs = preprocess_data_pdf_to_json(load_data('../data/raw/' + filename + '.json'),
                                                                  filename)
@@ -51,14 +51,14 @@ def main(pdf_directory):
                 json.dump(list_doc, file_p)
 
             print("Model trained")
-            generate_graph_3d()
+            generate_graph_3d(clusters_size)
             extract_cluster_themes()
 
         elif train_new_model == "no":
 
             print("Loading model...")
             if os.path.exists('../models/bert/last_file.json') and os.path.exists('../models/bert/bert_model.pkl'):
-                generate_graph_3d()
+                generate_graph_3d(clusters_size)
                 extract_cluster_themes()
         else:
             print("Need to be either yes or no!")
@@ -68,4 +68,4 @@ def main(pdf_directory):
 
 if __name__ == "__main__":
     pdf_directory = "../data/pdf"  # Specify the directory containing PDF files
-    main(pdf_directory)
+    main(pdf_directory, 5, 200)
