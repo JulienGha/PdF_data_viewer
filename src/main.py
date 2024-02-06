@@ -60,6 +60,10 @@ def main(pdf_directory):
             if os.path.exists('../models/bert/last_file.json') and os.path.exists('../models/bert/bert_model.pkl'):
                 generate_graph_3d()
                 extract_cluster_themes()
+        else:
+            print("Need to be either yes or no!")
+    else:
+        print("Error, need to have pdf file in the pdf raw directory")
 
 
 if __name__ == "__main__":
