@@ -8,6 +8,10 @@ from collections import Counter
 from nltk.corpus import stopwords
 import string
 import plotly.express as px
+import nltk
+
+
+nltk.download('stopwords')
 
 
 # Function to load the BERT model's encoded documents
@@ -78,7 +82,7 @@ def extract_cluster_themes():
 
     # Extract themes for each cluster excluding stop words and punctuation
     cluster_themes = {}
-    stop_words = set(stopwords.words('english'))
+    stop_words = set(stopwords.words('french'))
     punctuation = set(string.punctuation)
 
     for cluster_id in umap_df['cluster'].unique():
