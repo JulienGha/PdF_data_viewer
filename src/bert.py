@@ -1,4 +1,4 @@
-from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer, BertModel, FlaubertModel, FlaubertTokenizer
 import torch
 import pickle
 
@@ -14,8 +14,8 @@ def save_bert_model(encoded_docs, path="../models/bert/bert_model.pkl"):
 
 # Function to train a BERT model (for encoding documents)
 def train_bert_model(documents):
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    model = BertModel.from_pretrained('bert-base-uncased').to(device)
+    tokenizer = FlaubertTokenizer.from_pretrained('flaubert/flaubert_base_cased')
+    model = FlaubertModel.from_pretrained('flaubert/flaubert_base_cased').to(device)
 
     # Encoding the documents
     encoded_docs = []

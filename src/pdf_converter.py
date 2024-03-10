@@ -1,7 +1,11 @@
 import json
 import PyPDF2
+import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 import string
+
+nltk.download('punkt')
+nltk.download('stopwords')
 
 
 def convert_pdf_into_json(file, context=100):
