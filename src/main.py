@@ -2,7 +2,7 @@ import json
 from pdf_converter import convert_pdf_into_json
 from preprocess import preprocess_data_pdf_to_json, load_data
 from bert import train_bert_model
-from displayer import generate_graph_3d, extract_cluster_themes
+from displayer import generate_graph_3d, extract_cluster_themes, combine_segments, generate_combined_graph_3d
 import os
 
 
@@ -53,6 +53,7 @@ def main(pdf_directory, clusters_size=5, context_size=200):
             print("Model trained")
             generate_graph_3d(clusters_size)
             extract_cluster_themes()
+            generate_combined_graph_3d(clusters_size)
 
         elif train_new_model == "no":
 
@@ -60,6 +61,7 @@ def main(pdf_directory, clusters_size=5, context_size=200):
             if os.path.exists('../models/bert/last_file.json') and os.path.exists('../models/bert/bert_model.pkl'):
                 generate_graph_3d(clusters_size)
                 extract_cluster_themes()
+                generate_combined_graph_3d(clusters_size)
         else:
             print("Need to be either yes or no!")
     else:
