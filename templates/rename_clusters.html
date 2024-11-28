@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rename Clusters</title>
+</head>
+<body>
+    <h1>Rename Clusters</h1>
+    <form method="post">
+        {% for cluster_id, cluster_name in cluster_names.items() %}
+            <div>
+                <label for="cluster_{{ cluster_id }}">Cluster {{ cluster_id }}:</label>
+                <input type="text" id="cluster_{{ cluster_id }}" name="cluster_{{ cluster_id }}" value="{{ cluster_name }}">
+            </div>
+        {% endfor %}
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{{ url_for('index') }}">Back to Results</a>
+</body>
+</html>
