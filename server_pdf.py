@@ -173,7 +173,7 @@ def perform_clustering():
 
     # Define clustering parameters to test for HDBSCAN
     params = {
-        "min_cluster_size": [3, 4, 5, 6, 7, 10, 15, 20, 30, 50, 60, 80, 100],
+        "min_cluster_size": [3, 4, 5, 6, 7, 10],
         "min_samples": [4, 5, 7, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100],
         "cluster_selection_epsilon": [0.5, 0.8, 1.0],
         "metric": ['euclidean']
@@ -374,7 +374,7 @@ def perform_clustering():
 
     # Plot the number of emails sent by each author (only those who sent more than 5 emails)
     author_counts = df_emails['Author'].value_counts()
-    author_counts_filtered = author_counts[author_counts > 20]
+    author_counts_filtered = author_counts[author_counts > 40]
 
     plt.figure(figsize=(12, 6))
     author_counts_filtered.plot(kind='bar')
