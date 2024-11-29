@@ -359,6 +359,7 @@ def rename_clusters():
     # For GET request, render the renaming form
     return render_template('rename_clusters.html', cluster_names=cluster_names)
 
-# Run the app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Ensure Flask does not reload the app multiple times
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+
