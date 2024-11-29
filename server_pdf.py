@@ -3,6 +3,8 @@ import re
 import numpy as np
 import pandas as pd
 import extract_msg
+from collections import Counter
+
 
 # Text processing imports
 import nltk
