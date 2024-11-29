@@ -175,7 +175,7 @@ def perform_clustering():
     # --------------------------
 
     # Determine the optimal number of clusters using the Silhouette Score
-    cluster_range = range(15, 80)  # Trying 15 to 80 clusters
+    cluster_range = range(15, 70)  # Trying 15 to 80 clusters
     silhouette_scores = []
 
     for n_clusters in cluster_range:
