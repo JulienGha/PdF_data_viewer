@@ -3,8 +3,9 @@ import re
 import numpy as np
 import pandas as pd
 import extract_msg
-from collections import Counter
 
+# Import Counter from collections
+from collections import Counter
 
 # Text processing imports
 import nltk
@@ -25,6 +26,7 @@ import umap
 import plotly.express as px
 import plotly
 import json
+import matplotlib.pyplot as plt
 
 # Flask imports
 from flask import Flask, render_template, request, redirect, url_for
@@ -91,8 +93,7 @@ def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded
 
     # Specify the folder path
-    folder_path = r'/home/administrator/mail_infra'
-    # folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
+    folder_path = r'/home/administrator/mail_infra'  # Update this path to your folder
 
     # Initialize lists to store email contents and metadata
     emails = []
@@ -173,19 +174,16 @@ def perform_clustering():
     # K-Means Clustering
     # --------------------------
 
-    # Determine the optimal number of clusters using the Elbow Method
-    # You can adjust this range as needed
-    cluster_range = range(5, 80)  # Trying 5 to 20 clusters
-    inertia = []
+    # Determine the optimal number of clusters using the Silhouette Score
+    cluster_range = range(15, 80)  # Trying 15 to 80 clusters
     silhouette_scores = []
 
     for n_clusters in cluster_range:
         kmeans = KMeans(n_clusters=n_clusters, random_state=42)
         labels = kmeans.fit_predict(X_np)
-        inertia.append(kmeans.inertia_)
         silhouette = silhouette_score(X_np, labels)
         silhouette_scores.append(silhouette)
-        print(f"Clusters: {n_clusters}, Inertia: {kmeans.inertia_:.2f}, Silhouette Score: {silhouette:.4f}")
+        print(f"Clusters: {n_clusters}, Silhouette Score: {silhouette:.4f}")
 
     # Choose the number of clusters with the highest silhouette score
     optimal_clusters = cluster_range[np.argmax(silhouette_scores)]
@@ -203,6 +201,7 @@ def perform_clustering():
 
     # Extract cluster categories and topics
     cluster_names = {}
+    cluster_keywords = {}
     for cluster in set(labels):
         indices = df_emails[df_emails['Cluster'] == cluster].index
         cluster_emails = df_emails.loc[indices, 'Email'].tolist()
@@ -216,8 +215,10 @@ def perform_clustering():
             cluster_combined_text,
             keyphrase_ngram_range=(1, 2),
             stop_words=french_stop_words,
-            top_n=20
+            top_n=10
         )
+        cluster_keywords[cluster] = top_keywords
+
         # Determine the most frequent word/phrase for naming
         word_counts = Counter()
         for phrase, score in top_keywords:
@@ -230,7 +231,7 @@ def perform_clustering():
         print(f"Number of Emails: {len(cluster_emails)}")
         print(f"Sample Subjects: {', '.join(cluster_subjects[:5])} ...")
         print("Top Keywords:")
-        for keyword, score in top_keywords[:10]:
+        for keyword, score in top_keywords:
             print(f"  - {keyword} (score: {score:.4f})")
 
     # Map cluster names to the DataFrame
@@ -240,6 +241,21 @@ def perform_clustering():
     # Prepare data for Plotly with clusters
     df_emails['Cluster_Final'] = df_emails['Cluster']
     df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
+
+    # --------------------------
+    # Save Matplotlib Plot of Emails per Cluster
+    # --------------------------
+
+    cluster_counts = df_emails['Cluster_Name_Final'].value_counts()
+    plt.figure(figsize=(12, 6))
+    cluster_counts.plot(kind='bar')
+    plt.title('Number of Emails per Cluster')
+    plt.xlabel('Cluster Name')
+    plt.ylabel('Number of Emails')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig('static/emails_per_cluster.png')
+    plt.close()
 
     # --------------------------
     # Save Plotly Figure as JSON
@@ -280,6 +296,22 @@ def authors():
     author_counts.columns = ['Author', 'Email_Count']
     return render_template('authors.html', authors=author_counts.to_dict(orient='records'))
 
+@app.route('/clusters', methods=['GET'])
+def clusters():
+    global df_emails, cluster_keywords
+    # Prepare data for clusters
+    cluster_info = []
+    for cluster_id, cluster_name in cluster_names.items():
+        count = len(df_emails[df_emails['Cluster'] == cluster_id])
+        keywords = ', '.join([kw[0] for kw in cluster_keywords[cluster_id]])
+        cluster_info.append({
+            'Cluster_ID': cluster_id,
+            'Cluster_Name': cluster_name,
+            'Email_Count': count,
+            'Top_Keywords': keywords
+        })
+    return render_template('clusters.html', clusters=cluster_info)
+
 @app.route('/rename_clusters', methods=['GET', 'POST'])
 def rename_clusters():
     global cluster_names, df_emails, fig_json, X_embedded
@@ -296,6 +328,18 @@ def rename_clusters():
         df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
 
         df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
+
+        # Update the bar chart of emails per cluster
+        cluster_counts = df_emails['Cluster_Name_Final'].value_counts()
+        plt.figure(figsize=(12, 6))
+        cluster_counts.plot(kind='bar')
+        plt.title('Number of Emails per Cluster')
+        plt.xlabel('Cluster Name')
+        plt.ylabel('Number of Emails')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        plt.savefig('static/emails_per_cluster.png')
+        plt.close()
 
         # Update the 3D scatter plot
         fig = px.scatter_3d(

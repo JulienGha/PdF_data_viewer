@@ -5,10 +5,13 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Email Clustering Results</h1>
-    <a href="{{ url_for('rename_clusters') }}">Rename Clusters</a> |
-    <a href="{{ url_for('authors') }}">View Authors</a>
-    <h2>3D Scatter Plot of Clusters</h2>
+    <h1>Résultat Emails catégorisation</h1>
+    <a href="{{ url_for('rename_clusters') }}">Renommer Catégories</a> |
+    <a href="{{ url_for('authors') }}">Voir Auteurs</a> |
+    <a href="{{ url_for('clusters') }}">Voir catégories</a>
+    <h2>Nombre email par catégories</h2>
+    <img src="{{ url_for('static', filename='emails_per_cluster.png') }}" alt="Emails per Cluster">
+    <h2>Visualisation 3d</h2>
     <div id="plotly-div"></div>
     <script type="text/javascript">
         var plotly_data = {{ fig_json | safe }};
