@@ -32,6 +32,7 @@ from sklearn.metrics import silhouette_score
 
 # Download NLTK resources if not already downloaded
 nltk.download('stopwords')
+nltk.download('punkt_tab')
 nltk.download('punkt')
 
 # Initialize NLTK resources
