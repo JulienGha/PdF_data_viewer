@@ -95,7 +95,9 @@ def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
-    folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path to your folder
+    # folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path to your folder
+
+    folder_path = r'/home/administrator/mail_infra'
 
     # Initialize lists to store email contents and metadata
     emails = []
