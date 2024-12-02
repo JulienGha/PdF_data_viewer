@@ -168,7 +168,7 @@ def perform_clustering():
     umap_reducer = umap.UMAP(
         n_components=3,
         n_neighbors=8,
-        min_dist=0.2,
+        min_dist=0.5,
         metric='cosine',
         random_state=42
     )
