@@ -167,8 +167,8 @@ def perform_clustering():
     # Dimensionality reduction using UMAP to 3D
     umap_reducer = umap.UMAP(
         n_components=3,
-        n_neighbors=5,
-        min_dist=1,
+        n_neighbors=8,
+        min_dist=0.6,
         metric='cosine',
         random_state=42
     )
@@ -288,9 +288,9 @@ def perform_clustering():
             # Extract top keywords for the cluster
             top_keywords = kw_model.extract_keywords(
                 cluster_combined_text,
-                keyphrase_ngram_range=(1, 3),
+                keyphrase_ngram_range=(1, 2),
                 stop_words=french_stop_words,
-                top_n=20
+                top_n=30
             )
             cluster_keywords[cluster] = set([kw[0] for kw in top_keywords])
 
@@ -494,23 +494,23 @@ def clusters():
         # Update cluster names in the DataFrame
         df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
         df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
-
         df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
 
         # Group by cluster name and count the number of emails per cluster
-        cluster_counts = df_emails['Cluster_Name_Final'].value_counts()
+        cluster_counts = df_emails['Cluster_Name_Final'].value_counts().reset_index()
+        cluster_counts.columns = ['Cluster_Name_Final', 'Count']
 
         # Calculate the total number of emails
-        total_emails = cluster_counts.sum()
+        total_emails = cluster_counts['Count'].sum()
 
         # Identify the largest cluster
-        largest_cluster_name = cluster_counts.idxmax()
-        largest_cluster_count = cluster_counts.max()
+        largest_cluster_name = cluster_counts.loc[cluster_counts['Count'].idxmax(), 'Cluster_Name_Final']
+        largest_cluster_count = cluster_counts['Count'].max()
 
         # Check if the largest cluster exceeds 25% of the total emails
         if largest_cluster_count / total_emails > 0.25:
             # Exclude the largest cluster
-            cluster_counts_filtered = cluster_counts.drop(largest_cluster_name)
+            cluster_counts_filtered = cluster_counts[cluster_counts['Cluster_Name_Final'] != largest_cluster_name]
             print(f"Excluding largest cluster: {largest_cluster_name} with {largest_cluster_count} emails.")
         else:
             # Include all clusters if no cluster exceeds the threshold
@@ -521,7 +521,7 @@ def clusters():
 
         # Plot the filtered data
         plt.figure(figsize=(12, 6))
-        cluster_counts_filtered.plot(kind='bar')
+        plt.bar(cluster_counts_filtered['Cluster_Name_Final'], cluster_counts_filtered['Count'])
         plt.title('Nombre d\'Emails par Catégorie (Filtré)')
         plt.xlabel('Nom de la Catégorie')
         plt.ylabel('Nombre d\'Emails')
