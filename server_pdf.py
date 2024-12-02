@@ -181,8 +181,8 @@ def perform_clustering():
 
     # Define clustering parameters to test for HDBSCAN
     params = {
-        "min_cluster_size": [2, 3, 4, 5],
-        "min_samples": [1, 2, 3],
+        "min_cluster_size": [2, 3, 4, 5, 10, 20, 30, 40, 50, 70],
+        "min_samples": [3, 5, 8, 12, 15, 20, 30, 40, 50, 70, 100],
         "cluster_selection_epsilon": [0.0, 0.5, 1.0],
         "metric": ['euclidean']
     }
