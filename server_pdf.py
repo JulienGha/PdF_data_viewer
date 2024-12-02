@@ -95,7 +95,7 @@ def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
-    # folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
+    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
 
     folder_path = r'/home/administrator/mail_infra'
 
@@ -345,17 +345,27 @@ def perform_clustering():
     noise_indices = df_emails[df_emails['Cluster'] == -1].index  # Cluster labels are integers
     noise_embeddings = email_embeddings[noise_indices]
 
-    # Assign noise emails to the nearest cluster within the dynamic threshold
+    # Compute density of each cluster (number of points per cluster volume)
+    cluster_density = {}
+    for cluster, centroid in cluster_centroids.items():
+        cluster_points = email_embeddings[cluster_indices[cluster]]
+        volume = np.linalg.norm(cluster_points - centroid, axis=1).sum()
+        cluster_density[cluster] = len(cluster_points) / (volume + 1e-9)  # Avoid division by zero
+
+    # Threshold for reclassification
+    density_threshold = np.percentile(list(cluster_density.values()), 20)  # Use the 20th percentile
+
+    # Assign noise points only to sufficiently dense clusters
     reclassified_clusters = []
     for idx, noise_embedding in zip(noise_indices, noise_embeddings):
         min_distance = float('inf')
         assigned_cluster = -1  # Default is noise (integer)
         for cluster, centroid in cluster_centroids.items():
             distance = np.linalg.norm(noise_embedding - centroid)
-            if distance < min_distance:
+            if distance < min_distance and cluster_density[cluster] >= density_threshold:
                 min_distance = distance
-                closest_cluster = cluster  # Keep track of the closest cluster
-        if min_distance <= max_distance_threshold:
+                closest_cluster = cluster
+        if min_distance <= max_distance_threshold and cluster_density[closest_cluster] >= density_threshold:
             assigned_cluster = closest_cluster
         else:
             assigned_cluster = -1  # Remain as noise
@@ -392,16 +402,36 @@ def perform_clustering():
     plt.savefig('static/emails_per_author.png')
     plt.close()
 
-    # Plot the number of emails per cluster with cluster names
-    cluster_counts_named = df_emails.groupby(['Cluster_Reclassified', 'Cluster_Name_Reclassified']).size().reset_index(name='Count')
+    # Group by cluster name and count the number of emails per cluster
+    cluster_counts_named = df_emails.groupby(['Cluster_Reclassified', 'Cluster_Name_Reclassified']).size().reset_index(
+        name='Count')
+
+    # Calculate the total number of emails
+    total_emails = cluster_counts_named['Count'].sum()
+
+    # Identify the largest cluster
+    largest_cluster = cluster_counts_named.loc[cluster_counts_named['Count'].idxmax()]
+
+    # Check if the largest cluster exceeds 25% of the total emails
+    if largest_cluster['Count'] / total_emails > 0.25:
+        # Exclude the largest cluster
+        cluster_counts_named_filtered = cluster_counts_named[
+            cluster_counts_named['Cluster_Name_Reclassified'] != largest_cluster['Cluster_Name_Reclassified']]
+        print(
+            f"Excluding largest cluster: {largest_cluster['Cluster_Name_Reclassified']} with {largest_cluster['Count']} emails.")
+    else:
+        # Include all clusters if no cluster exceeds the threshold
+        cluster_counts_named_filtered = cluster_counts_named
+
+    # Plot the filtered data
     plt.figure(figsize=(10, 6))
-    plt.bar(cluster_counts_named['Cluster_Name_Reclassified'], cluster_counts_named['Count'])
-    plt.title('Number of Emails per Cluster After Reclassification with Names')
+    plt.bar(cluster_counts_named_filtered['Cluster_Name_Reclassified'], cluster_counts_named_filtered['Count'])
+    plt.title('Number of Emails per Cluster (Filtered)')
     plt.xlabel('Cluster Name')
     plt.ylabel('Number of Emails')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('static/emails_per_cluster_reclassified.png')
+    plt.savefig('static/emails_per_cluster_reclassified.png')  # Save as a new file
     plt.close()
 
     # --------------------------
@@ -464,11 +494,29 @@ def clusters():
 
         df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
 
-        # Update the bar chart of emails per cluster
+        # Group by cluster name and count the number of emails per cluster
         cluster_counts = df_emails['Cluster_Name_Final'].value_counts()
+
+        # Calculate the total number of emails
+        total_emails = cluster_counts.sum()
+
+        # Identify the largest cluster
+        largest_cluster_name = cluster_counts.idxmax()
+        largest_cluster_count = cluster_counts.max()
+
+        # Check if the largest cluster exceeds 25% of the total emails
+        if largest_cluster_count / total_emails > 0.25:
+            # Exclude the largest cluster
+            cluster_counts_filtered = cluster_counts.drop(largest_cluster_name)
+            print(f"Excluding largest cluster: {largest_cluster_name} with {largest_cluster_count} emails.")
+        else:
+            # Include all clusters if no cluster exceeds the threshold
+            cluster_counts_filtered = cluster_counts
+
+        # Plot the filtered data
         plt.figure(figsize=(12, 6))
-        cluster_counts.plot(kind='bar')
-        plt.title('Nombre d\'Emails par Catégorie')
+        cluster_counts_filtered.plot(kind='bar')
+        plt.title('Nombre d\'Emails par Catégorie (Filtré)')
         plt.xlabel('Nom de la Catégorie')
         plt.ylabel('Nombre d\'Emails')
         plt.xticks(rotation=45, ha='right')
