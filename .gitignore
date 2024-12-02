@@ -5,3 +5,6 @@ models/bert/*
 /clustering_results.csv
 /clustering_results_dbscan.csv
 static/*
+clustering_results.csv
+clustering_results_dbscan.csv
+static
