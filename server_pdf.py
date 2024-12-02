@@ -167,8 +167,8 @@ def perform_clustering():
     # Dimensionality reduction using UMAP to 3D
     umap_reducer = umap.UMAP(
         n_components=3,
-        n_neighbors=8,
-        min_dist=0.5,
+        n_neighbors=5,
+        min_dist=1,
         metric='cosine',
         random_state=42
     )
