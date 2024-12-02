@@ -95,7 +95,7 @@ def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
-    # folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path to your folder
+    # folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
 
     folder_path = r'/home/administrator/mail_infra'
 
@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 0.10  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 0.30  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
