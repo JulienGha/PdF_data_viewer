@@ -219,7 +219,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Composite score (adjust weights to prefer more clusters)
-        composite_score = silhouette * cluster_coverage * np.log(1 + num_clusters)
+        composite_score = silhouette * (1 - noise_ratio) * (np.log(1 + num_clusters) ** alpha)
 
         # Append results
         results.append({
