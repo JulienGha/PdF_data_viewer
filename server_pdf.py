@@ -167,8 +167,8 @@ def perform_clustering():
     # Dimensionality reduction using UMAP to 3D
     umap_reducer = umap.UMAP(
         n_components=3,
-        n_neighbors=10,
-        min_dist=0.0,
+        n_neighbors=8,
+        min_dist=0.2,
         metric='cosine',
         random_state=42
     )
@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 0.30  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 0.10  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
@@ -423,6 +423,9 @@ def perform_clustering():
         # Include all clusters if no cluster exceeds the threshold
         cluster_counts_named_filtered = cluster_counts_named
 
+    # Further filter to the top 30 largest clusters
+    cluster_counts_named_filtered = cluster_counts_named_filtered.nlargest(30, 'Count')
+
     # Plot the filtered data
     plt.figure(figsize=(10, 6))
     plt.bar(cluster_counts_named_filtered['Cluster_Name_Reclassified'], cluster_counts_named_filtered['Count'])
@@ -512,6 +515,9 @@ def clusters():
         else:
             # Include all clusters if no cluster exceeds the threshold
             cluster_counts_filtered = cluster_counts
+
+        # Further filter to the top 30 largest clusters
+        cluster_counts_filtered = cluster_counts_filtered.nlargest(30, 'Count')
 
         # Plot the filtered data
         plt.figure(figsize=(12, 6))
