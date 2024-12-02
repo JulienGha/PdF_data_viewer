@@ -168,7 +168,7 @@ def perform_clustering():
     umap_reducer = umap.UMAP(
         n_components=3,
         n_neighbors=30,  # Larger neighborhood for more data
-        min_dist=0.1,  # Tighter clustering
+        min_dist=0.5,  # Tighter clustering
         metric='cosine',  # Well-suited for text embeddings
         random_state=42
     )
@@ -178,7 +178,7 @@ def perform_clustering():
         "min_cluster_size": [10, 20, 50],
         "min_samples": [10, 20, 50],
         "cluster_selection_epsilon": [0.5, 1.0, 2.0],
-        "metric": ['euclidean', 'cosine']
+        "metric": ['euclidean']
     }
 
     # Initialize results list
