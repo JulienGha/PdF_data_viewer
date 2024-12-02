@@ -9,35 +9,42 @@
 </head>
 <body>
     <h1>Catégories</h1>
-    <table id="clusters-table" class="display">
-        <thead>
-            <tr>
-                <th>Numéro</th>
-                <th>Catégories</th>
-                <th>Nombre d'email</th>
-                <th>Top Keywords</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for cluster in clusters %}
-            <tr>
-                <td>{{ cluster.Cluster_ID }}</td>
-                <td>{{ cluster.Cluster_Name }}</td>
-                <td>{{ cluster.Email_Count }}</td>
-                <td>{{ cluster.Top_Keywords }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <form method="post">
+        <table id="clusters-table" class="display">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Catégorie</th>
+                    <th>Renommer</th>
+                    <th>Nombre d'Emails</th>
+                    <th>Mots-Clés</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cluster in clusters %}
+                <tr>
+                    <td>{{ cluster.Cluster_ID }}</td>
+                    <td>{{ cluster.Cluster_Name }}</td>
+                    <td>
+                        <input type="text" name="cluster_{{ cluster.Cluster_ID }}" value="{{ cluster.Cluster_Name }}">
+                    </td>
+                    <td>{{ cluster.Email_Count }}</td>
+                    <td>{{ cluster.Top_Keywords }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Enregistrer les Noms</button>
+    </form>
     <script>
         $(document).ready(function() {
             $('#clusters-table').DataTable({
                 "paging": true,
                 "searching": true,
-                "order": [[2, "desc"]]
+                "order": [[3, "desc"]]
             });
         });
     </script>
-    <a href="{{ url_for('index') }}">Back to Results</a>
+    <a href="{{ url_for('index') }}">Retourner aux résultats</a>
 </body>
 </html>

@@ -2,6 +2,7 @@ import os
 import re
 import numpy as np
 import pandas as pd
+import itertools
 import extract_msg
 
 # Import Counter from collections
@@ -16,7 +17,7 @@ from sentence_transformers import SentenceTransformer
 from keybert import KeyBERT
 
 # Clustering
-from sklearn.cluster import KMeans
+import hdbscan
 from sklearn.metrics import silhouette_score
 
 # Dimensionality reduction
@@ -52,6 +53,7 @@ df_emails = None
 cluster_names = {}
 fig_json = None
 X_embedded = None
+cluster_keywords = {}
 
 # Function to clean and preprocess text
 def preprocess_text(text, author_name):
@@ -90,10 +92,11 @@ def preprocess_text(text, author_name):
 
 # Function to perform clustering and generate visualizations
 def perform_clustering():
-    global df_emails, cluster_names, fig_json, X_embedded
+    global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
     folder_path = r'/home/administrator/mail_infra'  # Update this path to your folder
+    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
 
     # Initialize lists to store email contents and metadata
     emails = []
@@ -171,27 +174,95 @@ def perform_clustering():
     X_embedded = umap_reducer.fit_transform(X_np)
 
     # --------------------------
-    # K-Means Clustering
+    # HDBSCAN Clustering
     # --------------------------
 
-    # Determine the optimal number of clusters using the Silhouette Score
-    cluster_range = range(15, 70)  # Trying 15 to 80 clusters
-    silhouette_scores = []
+    import itertools
 
-    for n_clusters in cluster_range:
-        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-        labels = kmeans.fit_predict(X_np)
-        silhouette = silhouette_score(X_np, labels)
-        silhouette_scores.append(silhouette)
-        print(f"Clusters: {n_clusters}, Silhouette Score: {silhouette:.4f}")
+    # Define clustering parameters to test for HDBSCAN
+    params = {
+        "min_cluster_size": [2, 3, 4, 5],
+        "min_samples": [1, 2, 3],
+        "cluster_selection_epsilon": [0.0, 0.5, 1.0],
+        "metric": ['euclidean']
+    }
 
-    # Choose the number of clusters with the highest silhouette score
-    optimal_clusters = cluster_range[np.argmax(silhouette_scores)]
-    print(f"Optimal number of clusters: {optimal_clusters}")
+    # Initialize results list
+    results = []
 
-    # Apply K-Means with the optimal number of clusters
-    kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
-    labels = kmeans.fit_predict(X_np)
+    # Iterate through parameter combinations
+    for min_cluster_size, min_samples, epsilon, metric in itertools.product(
+            params['min_cluster_size'], params['min_samples'], params['cluster_selection_epsilon'], params['metric']
+    ):
+        clusterer = hdbscan.HDBSCAN(
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            metric=metric,
+            cluster_selection_epsilon=epsilon
+        )
+        labels = clusterer.fit_predict(X_np)
+
+        # Points in valid clusters
+        non_noise_points = (labels != -1).sum()
+
+        # Cluster coverage (proportion of non-noise points)
+        cluster_coverage = non_noise_points / len(labels)
+
+        # Number of clusters (excluding noise)
+        num_clusters = len(set(labels) - {-1})
+
+        # Calculate silhouette score for valid clusters
+        if num_clusters > 1 and non_noise_points > num_clusters:
+            valid_indices = labels != -1
+            silhouette = silhouette_score(X_np[valid_indices], labels[valid_indices])
+        else:
+            silhouette = -1  # Invalid silhouette score
+
+        # Composite score (adjust weights to prefer more clusters)
+        composite_score = silhouette * cluster_coverage * np.log(1 + num_clusters)
+
+        # Append results
+        results.append({
+            "min_cluster_size": min_cluster_size,
+            "min_samples": min_samples,
+            "epsilon": epsilon,
+            "metric": metric,
+            "noise_ratio": 1 - cluster_coverage,
+            "cluster_coverage": cluster_coverage,
+            "num_clusters": num_clusters,
+            "silhouette_score": silhouette,
+            "composite_score": composite_score
+        })
+
+    # Convert results to a DataFrame
+    results_df = pd.DataFrame(results)
+
+    # Sort by composite score, silhouette score, and number of clusters
+    results_df = results_df.sort_values(
+        by=["composite_score", "silhouette_score", "num_clusters"],
+        ascending=[False, False, False]
+    )
+
+    # Save to CSV for later analysis
+    results_df.to_csv("clustering_results.csv", index=False)
+
+    # Print the top 5 results
+    print("Top 5 clustering parameter combinations:")
+    print(results_df.head())
+
+    # Select the best clustering parameters based on the results
+    best_params = results_df.iloc[0]
+    print("\nBest Parameters:")
+    print(best_params)
+
+    # Apply HDBSCAN clustering with the best parameters
+    clusterer = hdbscan.HDBSCAN(
+        min_cluster_size=int(best_params['min_cluster_size']),
+        min_samples=int(best_params['min_samples']),
+        metric=str(best_params['metric']),
+        cluster_selection_epsilon=float(best_params['epsilon'])
+    )
+    labels = clusterer.fit_predict(X_np)
 
     # Add cluster labels to the DataFrame
     df_emails['Cluster'] = labels
@@ -249,9 +320,9 @@ def perform_clustering():
     cluster_counts = df_emails['Cluster_Name_Final'].value_counts()
     plt.figure(figsize=(12, 6))
     cluster_counts.plot(kind='bar')
-    plt.title('Number of Emails per Cluster')
-    plt.xlabel('Cluster Name')
-    plt.ylabel('Number of Emails')
+    plt.title('Nombre d\'Emails par Catégorie')
+    plt.xlabel('Nom de la Catégorie')
+    plt.ylabel('Nombre d\'Emails')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.savefig('static/emails_per_cluster.png')
@@ -269,13 +340,28 @@ def perform_clustering():
         z=X_embedded[:, 2],
         color='Cluster_Name_Final',
         hover_data=['Subject', 'FileName', 'Author'],
-        title='Email Clusters Visualized in 3D Space'
+        title='Visualisation des Catégories d\'Emails en 3D'
     )
 
     fig.update_traces(marker=dict(size=5))
 
     # Convert Plotly figure to JSON
     fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    # --------------------------
+    # Save Matplotlib Plot of Top 20 Authors
+    # --------------------------
+
+    author_counts = df_emails['Author'].value_counts().head(20)
+    plt.figure(figsize=(12, 6))
+    author_counts.plot(kind='bar')
+    plt.title('Top 20 des Auteurs par Nombre d\'Emails')
+    plt.xlabel('Auteur')
+    plt.ylabel('Nombre d\'Emails')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig('static/top_authors.png')
+    plt.close()
 
 # Run the clustering and visualization upon starting the app
 perform_clustering()
@@ -296,25 +382,9 @@ def authors():
     author_counts.columns = ['Author', 'Email_Count']
     return render_template('authors.html', authors=author_counts.to_dict(orient='records'))
 
-@app.route('/clusters', methods=['GET'])
+@app.route('/clusters', methods=['GET', 'POST'])
 def clusters():
-    global df_emails, cluster_keywords
-    # Prepare data for clusters
-    cluster_info = []
-    for cluster_id, cluster_name in cluster_names.items():
-        count = len(df_emails[df_emails['Cluster'] == cluster_id])
-        keywords = ', '.join([kw[0] for kw in cluster_keywords[cluster_id]])
-        cluster_info.append({
-            'Cluster_ID': cluster_id,
-            'Cluster_Name': cluster_name,
-            'Email_Count': count,
-            'Top_Keywords': keywords
-        })
-    return render_template('clusters.html', clusters=cluster_info)
-
-@app.route('/rename_clusters', methods=['GET', 'POST'])
-def rename_clusters():
-    global cluster_names, df_emails, fig_json, X_embedded
+    global df_emails, cluster_keywords, cluster_names, fig_json, X_embedded
 
     if request.method == 'POST':
         # Get new names from the form
@@ -333,9 +403,9 @@ def rename_clusters():
         cluster_counts = df_emails['Cluster_Name_Final'].value_counts()
         plt.figure(figsize=(12, 6))
         cluster_counts.plot(kind='bar')
-        plt.title('Number of Emails per Cluster')
-        plt.xlabel('Cluster Name')
-        plt.ylabel('Number of Emails')
+        plt.title('Nombre d\'Emails par Catégorie')
+        plt.xlabel('Nom de la Catégorie')
+        plt.ylabel('Nombre d\'Emails')
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.savefig('static/emails_per_cluster.png')
@@ -349,17 +419,31 @@ def rename_clusters():
             z=X_embedded[:, 2],
             color='Cluster_Name_Final',
             hover_data=['Subject', 'FileName', 'Author'],
-            title='Email Clusters Visualized in 3D Space After Renaming'
+            title='Visualisation des Catégories d\'Emails en 3D (Après Renommage)'
         )
         fig.update_traces(marker=dict(size=5))
         fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-        return redirect(url_for('index'))
+        return redirect(url_for('clusters'))
 
-    # For GET request, render the renaming form
-    return render_template('rename_clusters.html', cluster_names=cluster_names)
+    # Prepare data for clusters
+    cluster_info = []
+    for cluster_id, cluster_name in cluster_names.items():
+        count = len(df_emails[df_emails['Cluster'] == cluster_id])
+        keywords = ', '.join([kw[0] for kw in cluster_keywords.get(cluster_id, [])])
+        cluster_info.append({
+            'Cluster_ID': cluster_id,
+            'Cluster_Name': cluster_name,
+            'Email_Count': count,
+            'Top_Keywords': keywords
+        })
+    return render_template('clusters.html', clusters=cluster_info)
+
+@app.route('/rename_clusters', methods=['GET', 'POST'])
+def rename_clusters():
+    # Redirect to /clusters since we've combined the functionality
+    return redirect(url_for('clusters'))
 
 if __name__ == '__main__':
     # Ensure Flask does not reload the app multiple times
     app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
-
