@@ -2,5 +2,6 @@
 data/raw/*
 data/pdf/*
 models/bert/*
-clustering_results.csv
-clustering_results_dbscan.csv
+/clustering_results.csv
+/clustering_results_dbscan.csv
+static/*
