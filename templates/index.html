@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Email Clustering Results</title>
+    <title>Résultat Emails Catégorisation</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Résultat Emails catégorisation</h1>
-    <a href="{{ url_for('rename_clusters') }}">Renommer Catégories</a> |
-    <a href="{{ url_for('authors') }}">Voir Auteurs</a> |
-    <a href="{{ url_for('clusters') }}">Voir catégories</a>
-    <h2>Nombre email par catégories</h2>
+    <h1>Résultat Emails Catégorisation</h1>
+    <a href="{{ url_for('clusters') }}">Voir Catégories</a> |
+    <a href="{{ url_for('authors') }}">Voir Auteurs</a>
+    <h2>Nombre d'Emails par Catégorie</h2>
     <img src="{{ url_for('static', filename='emails_per_cluster.png') }}" alt="Emails per Cluster">
-    <h2>Visualisation 3d</h2>
+    <h2>Visualisation 3D</h2>
     <div id="plotly-div"></div>
     <script type="text/javascript">
         var plotly_data = {{ fig_json | safe }};
