@@ -95,9 +95,8 @@ def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
-    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
-
-    folder_path = r'/home/administrator/mail_infra'
+    folder_path = r'/home/administrator/mail_infra'  # Update this path as needed
+    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path as needed
 
     # Initialize lists to store email contents and metadata
     emails = []
@@ -174,16 +173,16 @@ def perform_clustering():
     )
     X_embedded = umap_reducer.fit_transform(X_np)
 
-    # Define clustering parameters to test for HDBSCAN
     params = {
-        "min_cluster_size": [3, 4, 5, 7, 10, 15, 20, 30, 50, 100],
-        "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 75, 100, 150, 200],
-        "cluster_selection_epsilon": [0.5, 0.8, 1.0, 2.0],
+        "min_cluster_size": [3, 4, 5, 7, 10, 20, 30, 50, 70, 100],
+        "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 250, 300],
+        "cluster_selection_epsilon": [0.5, 0.8, 1.0],
         "metric": ['euclidean']
     }
 
     # Initialize results list
     results = []
+    clusterer_configs = []
 
     # Iterate through parameter combinations
     for min_cluster_size, min_samples, epsilon, metric in itertools.product(
@@ -197,73 +196,72 @@ def perform_clustering():
         )
         labels = clusterer.fit_predict(X_embedded)
 
-        # Points in valid clusters
-        non_noise_points = (labels != -1).sum()
+        # Unique labels and number of clusters
+        unique_labels = set(labels)
+        num_clusters = len(unique_labels - {-1})
 
-        # Cluster coverage (proportion of non-noise points)
-        cluster_coverage = non_noise_points / len(labels)
+        # Compute statistics
+        noise_points = (labels == -1).sum()
+        noise_ratio = noise_points / len(labels)
 
-        # Number of clusters (excluding noise)
-        num_clusters = len(set(labels) - {-1})
-
-        # Calculate silhouette score for valid clusters
-        if num_clusters > 1 and non_noise_points > num_clusters:
-            valid_indices = labels != -1
-            silhouette = silhouette_score(X_embedded[valid_indices], labels[valid_indices])
+        # Calculate cluster sizes (excluding noise)
+        cluster_sizes = [sum(labels == cluster) for cluster in unique_labels - {-1}]
+        if cluster_sizes:
+            average_cluster_size = sum(cluster_sizes) / num_clusters
+            size_difference = max(cluster_sizes) - min(cluster_sizes)
         else:
-            silhouette = -1  # Invalid silhouette score
-
-        # Define a weight for the number of clusters
-        cluster_weight = 300  # Adjust this value to control the impact of the number of clusters
-
-        # Composite score with a linear function of the number of clusters
-        composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
+            average_cluster_size = 0
+            size_difference = 0
 
         # Append results
         results.append({
             "min_cluster_size": min_cluster_size,
             "min_samples": min_samples,
             "epsilon": epsilon,
-            "metric": metric,
-            "noise_ratio": 1 - cluster_coverage,
-            "cluster_coverage": cluster_coverage,
             "num_clusters": num_clusters,
-            "silhouette_score": silhouette,
-            "composite_score": composite_score
+            "noise_ratio": noise_ratio,
+            "average_cluster_size": average_cluster_size,
+            "size_difference": size_difference
         })
+        clusterer_configs.append(clusterer)
 
-    # Convert results to a DataFrame
+        # Print clustering results for debugging
+        print(f"\nParameters: min_cluster_size={min_cluster_size}, "
+              f"min_samples={min_samples}, epsilon={epsilon}")
+        print(f"Unique labels: {unique_labels}")
+        print(f"Number of clusters found: {num_clusters}")
+        print(f"Noise ratio: {noise_ratio:.2f}")
+        print(f"Average cluster size: {average_cluster_size}")
+        print(f"Size difference: {size_difference}")
+
+    # Configure pandas to display all rows and columns
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 1000)
+    pd.set_option('display.colheader_justify', 'center')
+
+    # Display options in console
     results_df = pd.DataFrame(results)
+    print("\nAvailable Clustering Configurations:")
+    print(results_df[[
+        "min_cluster_size",
+        "min_samples",
+        "epsilon",
+        "num_clusters",
+        "noise_ratio",
+        "average_cluster_size",
+        "size_difference"
+    ]])
 
-    # Sort by composite score, silhouette score, and noise ratio
-    results_df = results_df.sort_values(
-        by=["composite_score", "silhouette_score", "noise_ratio"],
-        ascending=[False, False, True]
-    )
+    # User selects the desired configuration
+    choice = int(input("\nSelect the configuration index (0-based): "))
+    best_params = results_df.iloc[choice]
+    print(f"\nUsing Parameters: {best_params.to_dict()}")
 
-    # Save to CSV for later analysis
-    results_df.to_csv("clustering_results.csv", index=False)
-
-    # Print the top 5 results
-    print("Top 5 clustering parameter combinations:")
-    print(results_df.head())
-
-    # Select the best clustering parameters based on the results
-    best_params = results_df.iloc[0]
-    print("\nBest Parameters:")
-    print(best_params)
-
-    # Apply HDBSCAN clustering with the best parameters
-    clusterer = hdbscan.HDBSCAN(
-        min_cluster_size=int(best_params['min_cluster_size']),
-        min_samples=int(best_params['min_samples']),
-        metric=str(best_params['metric']),
-        cluster_selection_epsilon=float(best_params['epsilon'])
-    )
-    labels = clusterer.fit_predict(X_embedded)
-
-    # Add cluster labels to the DataFrame (keep labels as integers)
-    df_emails['Cluster'] = labels  # Labels are integers
+    # Apply the chosen configuration
+    chosen_clusterer = clusterer_configs[choice]
+    labels = chosen_clusterer.fit_predict(X_embedded)
+    df_emails['Cluster'] = labels
 
     # Initialize KeyBERT model
     kw_model = KeyBERT(model_name)
@@ -271,12 +269,12 @@ def perform_clustering():
     # Extract cluster categories and topics
     cluster_texts = {}
     cluster_keywords = {}
-    global cluster_names  # Use global variable
+    global cluster_names
     cluster_names = {}
-    cluster_indices = {}  # To store indices of emails in each cluster
+    cluster_indices = {}
     for cluster in set(labels):
         if cluster != -1:
-            indices = df_emails[df_emails['Cluster'] == cluster].index  # Cluster labels are integers
+            indices = df_emails[df_emails['Cluster'] == cluster].index
             cluster_indices[cluster] = indices
             cluster_emails = df_emails.loc[indices, 'Email'].tolist()
             cluster_subjects = df_emails.loc[indices, 'Subject'].tolist()
@@ -314,7 +312,101 @@ def perform_clustering():
     df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
 
     # --------------------------
-    # Reclassification (as per previous refined logic)
+    # Reclustering the Largest Cluster
+    # --------------------------
+
+    # Identify the largest cluster
+    cluster_counts = df_emails['Cluster'].value_counts()
+    largest_cluster_label = cluster_counts.idxmax()
+    largest_cluster_size = cluster_counts.max()
+
+    print(f"\nReclustering the largest cluster: {largest_cluster_label} "
+          f"with {largest_cluster_size} emails.")
+
+    # Check if the largest cluster is significantly large
+    if largest_cluster_size / len(df_emails) > 0.1:  # Adjust threshold as needed
+        # Extract data points belonging to the largest cluster
+        indices_largest_cluster = df_emails[df_emails['Cluster'] == largest_cluster_label].index
+        X_largest_cluster = X_np[indices_largest_cluster]
+
+        # Apply UMAP again for this subset (optional)
+        umap_reducer_sub = umap.UMAP(
+            n_components=3,
+            n_neighbors=7,
+            min_dist=0.6,
+            metric='cosine',
+            random_state=42
+        )
+        X_embedded_sub = umap_reducer_sub.fit_transform(X_largest_cluster)
+
+        params = {
+            "min_cluster_size": [3, 4, 5, 7, 10, 20, 30, 50, 70, 100],
+            "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 250, 300],
+            "cluster_selection_epsilon": [0.5, 0.8, 1.0],
+            "metric": ['euclidean']
+        }
+
+        # For simplicity, select one set of parameters for reclustering
+        reclusterer = hdbscan.HDBSCAN(
+            min_cluster_size=2,
+            min_samples=1,
+            metric='euclidean',
+            cluster_selection_epsilon=0.5
+        )
+        sub_labels = reclusterer.fit_predict(X_embedded_sub)
+
+        # Offset subcluster labels to ensure unique labels
+        max_label = df_emails['Cluster'].max()
+        sub_labels_adjusted = sub_labels.copy()
+        sub_labels_adjusted[sub_labels != -1] += max_label + 1
+
+        # Update labels in the original DataFrame
+        df_emails.loc[indices_largest_cluster, 'Cluster'] = sub_labels_adjusted
+
+        # Update cluster names and keywords for new subclusters
+        new_clusters = set(sub_labels_adjusted) - {-1}
+        for cluster in new_clusters:
+            indices = df_emails[df_emails['Cluster'] == cluster].index
+            cluster_indices[cluster] = indices
+            cluster_emails = df_emails.loc[indices, 'Email'].tolist()
+            cluster_subjects = df_emails.loc[indices, 'Subject'].tolist()
+
+            # Combine all cluster emails into a single document
+            cluster_combined_text = ' '.join(cluster_emails)
+
+            # Extract top keywords for the cluster
+            top_keywords = kw_model.extract_keywords(
+                cluster_combined_text,
+                keyphrase_ngram_range=(1, 3),
+                stop_words=french_stop_words,
+                top_n=30
+            )
+            cluster_keywords[cluster] = set([kw[0] for kw in top_keywords])
+
+            # Determine the most frequent word/phrase for naming
+            word_counts = Counter()
+            for phrase, score in top_keywords:
+                word_counts[phrase] += 1
+            most_common_word = word_counts.most_common(1)[0][0]
+            cluster_names[cluster] = most_common_word.capitalize()
+
+            # Print cluster information
+            print(f"\nReclustered Cluster {cluster} - {cluster_names[cluster]}:")
+            print(f"Number of Emails: {len(cluster_emails)}")
+            print(f"Sample Subjects: {', '.join(cluster_subjects[:5])} ...")
+            print("Top Keywords:")
+            for keyword, score in top_keywords[:10]:
+                print(f"  - {keyword} (score: {score:.4f})")
+
+        # Update cluster names in the DataFrame
+        df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
+        df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
+
+    else:
+        print("Largest cluster is not significantly large; skipping reclustering.")
+
+    # --------------------------
+    # Reclassification Step
     # --------------------------
 
     # Compute centroids for each cluster
@@ -336,36 +428,49 @@ def perform_clustering():
                 min_distance = distance
         all_distances.append(min_distance)
 
-    # Determine dynamic max distance threshold
-    max_distance_threshold = np.percentile(all_distances, 10)  # Use the xth percentile
+    # Remove NaN values from all_distances
+    all_distances = [d for d in all_distances if not np.isnan(d)]
 
-    print(f"Dynamic max_distance_threshold set to: {max_distance_threshold:.4f}")
+    if all_distances:
+        max_distance_threshold = np.percentile(all_distances, 10)
+        print(f"Dynamic max_distance_threshold set to: {max_distance_threshold:.4f}")
+    else:
+        print("No valid distances found. Setting max_distance_threshold to default value.")
+        max_distance_threshold = 0
 
     # Get indices of noise emails
-    noise_indices = df_emails[df_emails['Cluster'] == -1].index  # Cluster labels are integers
+    noise_indices = df_emails[df_emails['Cluster'] == -1].index
     noise_embeddings = email_embeddings[noise_indices]
 
     # Compute density of each cluster (number of points per cluster volume)
     cluster_density = {}
     for cluster, centroid in cluster_centroids.items():
         cluster_points = email_embeddings[cluster_indices[cluster]]
-        volume = np.linalg.norm(cluster_points - centroid, axis=1).sum()
-        cluster_density[cluster] = len(cluster_points) / (volume + 1e-9)  # Avoid division by zero
+        if len(cluster_points) > 0:
+            volume = np.linalg.norm(cluster_points - centroid, axis=1).sum()
+            cluster_density[cluster] = len(cluster_points) / (volume + 1e-9)  # Avoid division by zero
+        else:
+            print(f"Cluster {cluster} has no points.")
 
-    # Threshold for reclassification
-    density_threshold = np.percentile(list(cluster_density.values()), 10)  # Use the 20th percentile
+    # Handle empty cluster_density
+    if cluster_density:
+        density_threshold = np.percentile(list(cluster_density.values()), 10)
+    else:
+        print("No clusters to compute density threshold.")
+        density_threshold = 0
 
     # Assign noise points only to sufficiently dense clusters
     reclassified_clusters = []
     for idx, noise_embedding in zip(noise_indices, noise_embeddings):
         min_distance = float('inf')
-        assigned_cluster = -1  # Default is noise (integer)
+        assigned_cluster = -1  # Default is noise
+        closest_cluster = -1
         for cluster, centroid in cluster_centroids.items():
             distance = np.linalg.norm(noise_embedding - centroid)
             if distance < min_distance and cluster_density[cluster] >= density_threshold:
                 min_distance = distance
                 closest_cluster = cluster
-        if min_distance <= max_distance_threshold and cluster_density[closest_cluster] >= density_threshold:
+        if min_distance <= max_distance_threshold and cluster_density.get(closest_cluster, 0) >= density_threshold:
             assigned_cluster = closest_cluster
         else:
             assigned_cluster = -1  # Remain as noise
@@ -394,7 +499,7 @@ def perform_clustering():
 
     plt.figure(figsize=(12, 6))
     author_counts_filtered.plot(kind='bar')
-    plt.title('Quantité d\'emails envoyés par personne (minimum 5)')
+    plt.title("Quantité d'emails envoyés par personne (minimum 5)")
     plt.xlabel('Auteur')
     plt.ylabel('Quantité')
     plt.xticks(rotation=45, ha='right')
@@ -403,24 +508,30 @@ def perform_clustering():
     plt.close()
 
     # Group by cluster name and count the number of emails per cluster
-    cluster_counts_named = df_emails.groupby(['Cluster_Reclassified', 'Cluster_Name_Reclassified']).size().reset_index(
-        name='Count')
+    cluster_counts_named = df_emails.groupby(
+        ['Cluster_Reclassified', 'Cluster_Name_Reclassified']
+    ).size().reset_index(name='Count')
 
     # Calculate the total number of emails
     total_emails = cluster_counts_named['Count'].sum()
 
     # Identify the largest cluster
-    largest_cluster = cluster_counts_named.loc[cluster_counts_named['Count'].idxmax()]
-
-    # Check if the largest cluster exceeds 25% of the total emails
-    if largest_cluster['Count'] / total_emails > 0.25:
-        # Exclude the largest cluster
-        cluster_counts_named_filtered = cluster_counts_named[
-            cluster_counts_named['Cluster_Name_Reclassified'] != largest_cluster['Cluster_Name_Reclassified']]
-        print(
-            f"Excluding largest cluster: {largest_cluster['Cluster_Name_Reclassified']} with {largest_cluster['Count']} emails.")
+    if not cluster_counts_named.empty:
+        largest_cluster = cluster_counts_named.loc[cluster_counts_named['Count'].idxmax()]
+        # Check if the largest cluster exceeds 25% of the total emails
+        if largest_cluster['Count'] / total_emails > 0.25:
+            # Exclude the largest cluster
+            cluster_counts_named_filtered = cluster_counts_named[
+                cluster_counts_named['Cluster_Name_Reclassified'] != largest_cluster['Cluster_Name_Reclassified']
+            ]
+            print(
+                f"Excluding largest cluster: {largest_cluster['Cluster_Name_Reclassified']} "
+                f"with {largest_cluster['Count']} emails."
+            )
+        else:
+            # Include all clusters if no cluster exceeds the threshold
+            cluster_counts_named_filtered = cluster_counts_named
     else:
-        # Include all clusters if no cluster exceeds the threshold
         cluster_counts_named_filtered = cluster_counts_named
 
     # Further filter to the top 30 largest clusters
@@ -428,13 +539,16 @@ def perform_clustering():
 
     # Plot the filtered data
     plt.figure(figsize=(10, 6))
-    plt.bar(cluster_counts_named_filtered['Cluster_Name_Reclassified'], cluster_counts_named_filtered['Count'])
+    plt.bar(
+        cluster_counts_named_filtered['Cluster_Name_Reclassified'],
+        cluster_counts_named_filtered['Count']
+    )
     plt.title('Number of Emails per Cluster (Filtered)')
     plt.xlabel('Cluster Name')
     plt.ylabel('Number of Emails')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('static/emails_per_cluster_reclassified.png')  # Save as a new file
+    plt.savefig('static/emails_per_cluster_reclassified.png')
     plt.close()
 
     # --------------------------
@@ -453,13 +567,14 @@ def perform_clustering():
         z=X_embedded[:, 2],
         color='Cluster_Name_Final',
         hover_data=['Subject', 'FileName', 'Author'],
-        title='Email Clusters Visualized in 3D Space After Reclassification'
+        title='Email Clusters Visualized in 3D Space After Reclustering'
     )
 
     fig.update_traces(marker=dict(size=5))
 
     # Convert Plotly figure to JSON
     fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
 
 # Run the clustering and visualization upon starting the app
 perform_clustering()
