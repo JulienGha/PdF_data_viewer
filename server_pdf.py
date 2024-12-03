@@ -168,7 +168,7 @@ def perform_clustering():
     umap_reducer = umap.UMAP(
         n_components=3,
         n_neighbors=7,
-        min_dist=0.5,
+        min_dist=0.6,
         metric='cosine',
         random_state=42
     )
@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 10  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 50  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
