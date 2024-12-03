@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 0.10  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 0.30  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
