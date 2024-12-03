@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 50  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 300  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
@@ -288,7 +288,7 @@ def perform_clustering():
             # Extract top keywords for the cluster
             top_keywords = kw_model.extract_keywords(
                 cluster_combined_text,
-                keyphrase_ngram_range=(1, 2),
+                keyphrase_ngram_range=(1, 3),
                 stop_words=french_stop_words,
                 top_n=30
             )
