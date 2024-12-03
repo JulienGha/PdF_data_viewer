@@ -316,7 +316,7 @@ def perform_clustering():
     # --------------------------
     # Iterative Reclustering
     # --------------------------
-    max_iterations = 30
+    max_iterations = 50
     iteration = 0
     total_emails = len(df_emails)
 
