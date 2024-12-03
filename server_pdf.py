@@ -168,7 +168,7 @@ def perform_clustering():
     umap_reducer = umap.UMAP(
         n_components=3,
         n_neighbors=7,
-        min_dist=3,
+        min_dist=1,
         metric='cosine',
         random_state=42
     )
@@ -493,7 +493,6 @@ def clusters():
 
         # Update cluster names in the DataFrame
         df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
-        df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
         df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
 
         # Group by cluster name and count the number of emails per cluster
