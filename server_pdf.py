@@ -316,7 +316,7 @@ def perform_clustering():
     # --------------------------
     # Iterative Reclustering
     # --------------------------
-    max_iterations = 10
+    max_iterations = 30
     iteration = 0
     total_emails = len(df_emails)
 
@@ -357,9 +357,9 @@ def perform_clustering():
 
         # Define new clustering parameters for reclustering
         recluster_params = {
-            "min_cluster_size": [3, 4, 5],
-            "min_samples": [1, 2, 3],
-            "cluster_selection_epsilon": [0.5, 1.0],
+            "min_cluster_size": [3, 4, 5, 7, 10],
+            "min_samples": [1, 2, 3, 4],
+            "cluster_selection_epsilon": [0.5, 1.0, 2.0],
             "metric": ['euclidean']
         }
 
@@ -404,9 +404,17 @@ def perform_clustering():
             })
             reclusterer_configs.append(reclusterer)
 
-        # Select the reclustering configuration with the maximum number of clusters
+        # Create a DataFrame to store results
         recluster_results_df = pd.DataFrame(recluster_results)
-        best_recluster_index = recluster_results_df['num_clusters'].idxmax()
+
+        # Define a composite score for each configuration
+        recluster_results_df['composite_score'] = (
+                recluster_results_df['num_clusters'] * 2  # Higher weight for number of clusters
+                - recluster_results_df['average_cluster_size']  # Penalize larger average cluster sizes
+        )
+
+        # Select the reclustering configuration with the highest composite score
+        best_recluster_index = recluster_results_df['composite_score'].idxmax()
         best_recluster_params = recluster_results_df.iloc[best_recluster_index]
         print(f"Best reclustering parameters: {best_recluster_params.to_dict()}")
 
