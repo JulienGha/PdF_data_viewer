@@ -8,6 +8,7 @@
     <script type="text/javascript" src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
+    <a href="{{ url_for('index') }}">Retourner aux résultats</a>
     <h1>Nos Clients</h1>
     <h2>Top 20 des Auteurs</h2>
     <img src="{{ url_for('static', filename='top_authors.png') }}" alt="Top 20 Auteurs">
@@ -36,6 +37,5 @@
             });
         });
     </script>
-    <a href="{{ url_for('index') }}">Retourner aux résultats</a>
 </body>
 </html>

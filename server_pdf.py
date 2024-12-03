@@ -91,12 +91,13 @@ def preprocess_text(text, author_name):
     return ' '.join(tokens)
 
 # Function to perform clustering and generate visualizations
+# Function to perform clustering and generate visualizations
 def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
     folder_path = r'/home/administrator/mail_infra'  # Update this path as needed
-    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path as needed
+    folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path as needed
 
     # Initialize lists to store email contents and metadata
     emails = []
@@ -173,10 +174,11 @@ def perform_clustering():
     )
     X_embedded = umap_reducer.fit_transform(X_np)
 
+    # Initial clustering parameters
     params = {
-        "min_cluster_size": [3, 4, 5, 7, 10, 20, 30, 50, 70, 100],
-        "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 250, 300],
-        "cluster_selection_epsilon": [0.5, 0.8, 1.0],
+        "min_cluster_size": [3, 4, 5, 7, 10],
+        "min_samples": [1, 2, 3, 4],
+        "cluster_selection_epsilon": [0.5, 1.0, 2.0],
         "metric": ['euclidean']
     }
 
@@ -266,19 +268,20 @@ def perform_clustering():
     # Initialize KeyBERT model
     kw_model = KeyBERT(model_name)
 
-    # Extract cluster categories and topics
-    cluster_texts = {}
-    cluster_keywords = {}
+    # Initialize global variables
     global cluster_names
     cluster_names = {}
     cluster_indices = {}
-    for cluster in set(labels):
-        if cluster != -1:
+    cluster_keywords = {}
+
+    # Function to extract cluster names and keywords
+    def extract_cluster_info(labels):
+        unique_clusters = set(labels) - {-1}
+        for cluster in unique_clusters:
             indices = df_emails[df_emails['Cluster'] == cluster].index
             cluster_indices[cluster] = indices
             cluster_emails = df_emails.loc[indices, 'Email'].tolist()
             cluster_subjects = df_emails.loc[indices, 'Subject'].tolist()
-            cluster_texts[cluster] = cluster_emails
 
             # Combine all cluster emails into a single document
             cluster_combined_text = ' '.join(cluster_emails)
@@ -307,24 +310,37 @@ def perform_clustering():
             for keyword, score in top_keywords[:10]:
                 print(f"  - {keyword} (score: {score:.4f})")
 
-    # Map cluster names to the DataFrame
-    df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
-    df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
+    # Extract initial cluster information
+    extract_cluster_info(labels)
 
     # --------------------------
-    # Reclustering the Largest Cluster
+    # Iterative Reclustering
     # --------------------------
+    max_iterations = 10
+    iteration = 0
+    total_emails = len(df_emails)
 
-    # Identify the largest cluster
-    cluster_counts = df_emails['Cluster'].value_counts()
-    largest_cluster_label = cluster_counts.idxmax()
-    largest_cluster_size = cluster_counts.max()
+    while True:
+        # Identify the largest cluster
+        cluster_counts = df_emails['Cluster'].value_counts()
+        largest_cluster_label = cluster_counts.idxmax()
+        largest_cluster_size = cluster_counts.max()
+        size_difference = cluster_counts.max() - cluster_counts.min()
+        largest_cluster_percentage = largest_cluster_size / total_emails
 
-    print(f"\nReclustering the largest cluster: {largest_cluster_label} "
-          f"with {largest_cluster_size} emails.")
+        print(f"\nIteration {iteration + 1}:")
+        print(f"Largest cluster {largest_cluster_label} has {largest_cluster_size} emails "
+              f"({largest_cluster_percentage:.2%} of total).")
+        print(f"Size difference between largest and smallest clusters: {size_difference}")
 
-    # Check if the largest cluster is significantly large
-    if largest_cluster_size / len(df_emails) > 0.1:  # Adjust threshold as needed
+        # Check if the largest cluster exceeds 10% of total emails
+        if largest_cluster_percentage <= 0.10 or iteration >= max_iterations:
+            print("Stopping reclustering.")
+            break
+
+        # Proceed to recluster the largest cluster
+        print(f"Reclustering cluster {largest_cluster_label}...")
+
         # Extract data points belonging to the largest cluster
         indices_largest_cluster = df_emails[df_emails['Cluster'] == largest_cluster_label].index
         X_largest_cluster = X_np[indices_largest_cluster]
@@ -339,21 +355,64 @@ def perform_clustering():
         )
         X_embedded_sub = umap_reducer_sub.fit_transform(X_largest_cluster)
 
-        params = {
-            "min_cluster_size": [3, 4, 5, 7, 10, 20, 30, 50, 70, 100],
-            "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 250, 300],
-            "cluster_selection_epsilon": [0.5, 0.8, 1.0],
+        # Define new clustering parameters for reclustering
+        recluster_params = {
+            "min_cluster_size": [3, 4, 5],
+            "min_samples": [1, 2, 3],
+            "cluster_selection_epsilon": [0.5, 1.0],
             "metric": ['euclidean']
         }
 
-        # For simplicity, select one set of parameters for reclustering
-        reclusterer = hdbscan.HDBSCAN(
-            min_cluster_size=2,
-            min_samples=1,
-            metric='euclidean',
-            cluster_selection_epsilon=0.5
-        )
-        sub_labels = reclusterer.fit_predict(X_embedded_sub)
+        # Initialize reclustering results
+        recluster_results = []
+        reclusterer_configs = []
+
+        # Iterate through reclustering parameter combinations
+        for min_cluster_size, min_samples, epsilon, metric in itertools.product(
+                recluster_params['min_cluster_size'], recluster_params['min_samples'],
+                recluster_params['cluster_selection_epsilon'], recluster_params['metric']
+        ):
+            reclusterer = hdbscan.HDBSCAN(
+                min_cluster_size=min_cluster_size,
+                min_samples=min_samples,
+                metric=metric,
+                cluster_selection_epsilon=epsilon
+            )
+            sub_labels = reclusterer.fit_predict(X_embedded_sub)
+
+            # Unique labels and number of clusters
+            unique_sub_labels = set(sub_labels)
+            num_sub_clusters = len(unique_sub_labels - {-1})
+
+            # Compute statistics
+            sub_cluster_sizes = [sum(sub_labels == cluster) for cluster in unique_sub_labels - {-1}]
+            if sub_cluster_sizes:
+                sub_average_cluster_size = sum(sub_cluster_sizes) / num_sub_clusters
+                sub_size_difference = max(sub_cluster_sizes) - min(sub_cluster_sizes)
+            else:
+                sub_average_cluster_size = 0
+                sub_size_difference = 0
+
+            # Append results
+            recluster_results.append({
+                "min_cluster_size": min_cluster_size,
+                "min_samples": min_samples,
+                "epsilon": epsilon,
+                "num_clusters": num_sub_clusters,
+                "average_cluster_size": sub_average_cluster_size,
+                "size_difference": sub_size_difference
+            })
+            reclusterer_configs.append(reclusterer)
+
+        # Select the reclustering configuration with the maximum number of clusters
+        recluster_results_df = pd.DataFrame(recluster_results)
+        best_recluster_index = recluster_results_df['num_clusters'].idxmax()
+        best_recluster_params = recluster_results_df.iloc[best_recluster_index]
+        print(f"Best reclustering parameters: {best_recluster_params.to_dict()}")
+
+        # Apply the best reclustering configuration
+        best_reclusterer = reclusterer_configs[best_recluster_index]
+        sub_labels = best_reclusterer.fit_predict(X_embedded_sub)
 
         # Offset subcluster labels to ensure unique labels
         max_label = df_emails['Cluster'].max()
@@ -402,8 +461,7 @@ def perform_clustering():
         df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
         df_emails['Cluster_Name'] = df_emails['Cluster_Name'].fillna('Noise')
 
-    else:
-        print("Largest cluster is not significantly large; skipping reclustering.")
+        iteration += 1
 
     # --------------------------
     # Reclassification Step
@@ -567,7 +625,7 @@ def perform_clustering():
         z=X_embedded[:, 2],
         color='Cluster_Name_Final',
         hover_data=['Subject', 'FileName', 'Author'],
-        title='Email Clusters Visualized in 3D Space After Reclustering'
+        title='Email Clusters Visualized in 3D Space After Iterative Reclustering'
     )
 
     fig.update_traces(marker=dict(size=5))
