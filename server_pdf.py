@@ -95,9 +95,9 @@ def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
     # Specify the folder path
-    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
+    folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'
 
-    folder_path = r'/home/administrator/mail_infra'
+    #folder_path = r'/home/administrator/mail_infra'
 
     # Initialize lists to store email contents and metadata
     emails = []
@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 0.50  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 10  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
@@ -337,7 +337,7 @@ def perform_clustering():
         all_distances.append(min_distance)
 
     # Determine dynamic max distance threshold
-    max_distance_threshold = np.percentile(all_distances, 40)  # Use the xth percentile
+    max_distance_threshold = np.percentile(all_distances, 10)  # Use the xth percentile
 
     print(f"Dynamic max_distance_threshold set to: {max_distance_threshold:.4f}")
 
