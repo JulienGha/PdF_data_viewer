@@ -214,7 +214,7 @@ def perform_clustering():
             silhouette = -1  # Invalid silhouette score
 
         # Define a weight for the number of clusters
-        cluster_weight = 0.30  # Adjust this value to control the impact of the number of clusters
+        cluster_weight = 0.50  # Adjust this value to control the impact of the number of clusters
 
         # Composite score with a linear function of the number of clusters
         composite_score = silhouette * cluster_coverage + cluster_weight * num_clusters
@@ -353,7 +353,7 @@ def perform_clustering():
         cluster_density[cluster] = len(cluster_points) / (volume + 1e-9)  # Avoid division by zero
 
     # Threshold for reclassification
-    density_threshold = np.percentile(list(cluster_density.values()), 20)  # Use the 20th percentile
+    density_threshold = np.percentile(list(cluster_density.values()), 10)  # Use the 20th percentile
 
     # Assign noise points only to sufficiently dense clusters
     reclassified_clusters = []
