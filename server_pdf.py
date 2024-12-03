@@ -97,7 +97,7 @@ def perform_clustering():
 
     # Specify the folder path
     folder_path = r'/home/administrator/mail_infra'  # Update this path as needed
-    folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path as needed
+    #folder_path = r'C:\Users\JGH\Documents\Mail semaine du 4 au 8 nov'  # Update this path as needed
 
     # Initialize lists to store email contents and metadata
     emails = []
