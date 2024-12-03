@@ -333,7 +333,7 @@ def perform_clustering():
         print(f"Size difference between largest and smallest clusters: {size_difference}")
 
         # Check if the largest cluster contains fewer than 200 emails or maximum iterations reached
-        if largest_cluster_size <= 200 or iteration >= max_iterations:
+        if largest_cluster_size <= 600 or iteration >= max_iterations:
             print("Stopping reclustering as conditions are met.")
             break
 
@@ -442,7 +442,7 @@ def perform_clustering():
             # Extract top keywords for the cluster
             top_keywords = kw_model.extract_keywords(
                 cluster_combined_text,
-                keyphrase_ngram_range=(1, 3),
+                keyphrase_ngram_range=(1, 4),
                 stop_words=french_stop_words,
                 top_n=30
             )
