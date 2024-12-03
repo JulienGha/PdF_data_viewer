@@ -316,7 +316,7 @@ def perform_clustering():
     # --------------------------
     # Iterative Reclustering
     # --------------------------
-    max_iterations = 50
+    max_iterations = 100  # Maximum number of reclustering iterations
     iteration = 0
     total_emails = len(df_emails)
 
@@ -326,16 +326,15 @@ def perform_clustering():
         largest_cluster_label = cluster_counts.idxmax()
         largest_cluster_size = cluster_counts.max()
         size_difference = cluster_counts.max() - cluster_counts.min()
-        largest_cluster_percentage = largest_cluster_size / total_emails
 
         print(f"\nIteration {iteration + 1}:")
         print(f"Largest cluster {largest_cluster_label} has {largest_cluster_size} emails "
-              f"({largest_cluster_percentage:.2%} of total).")
+              f"({largest_cluster_size / total_emails:.2%} of total).")
         print(f"Size difference between largest and smallest clusters: {size_difference}")
 
-        # Check if the largest cluster exceeds 10% of total emails
-        if largest_cluster_percentage <= 0.10 or iteration >= max_iterations:
-            print("Stopping reclustering.")
+        # Check if the largest cluster contains fewer than 200 emails or maximum iterations reached
+        if largest_cluster_size <= 200 or iteration >= max_iterations:
+            print("Stopping reclustering as conditions are met.")
             break
 
         # Proceed to recluster the largest cluster
@@ -434,7 +433,6 @@ def perform_clustering():
         new_clusters = set(sub_labels_adjusted) - {-1}
         for cluster in new_clusters:
             indices = df_emails[df_emails['Cluster'] == cluster].index
-            cluster_indices[cluster] = indices
             cluster_emails = df_emails.loc[indices, 'Email'].tolist()
             cluster_subjects = df_emails.loc[indices, 'Subject'].tolist()
 
@@ -457,7 +455,7 @@ def perform_clustering():
             most_common_word = word_counts.most_common(1)[0][0]
             cluster_names[cluster] = most_common_word.capitalize()
 
-            # Print cluster information
+            # Print reclustered cluster information
             print(f"\nReclustered Cluster {cluster} - {cluster_names[cluster]}:")
             print(f"Number of Emails: {len(cluster_emails)}")
             print(f"Sample Subjects: {', '.join(cluster_subjects[:5])} ...")
