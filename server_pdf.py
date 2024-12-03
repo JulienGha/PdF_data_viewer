@@ -167,17 +167,18 @@ def perform_clustering():
     # Dimensionality reduction using UMAP to 3D
     umap_reducer = umap.UMAP(
         n_components=3,
-        n_neighbors=30,  # Larger neighborhood for more data
-        min_dist=0.5,  # Tighter clustering
-        metric='cosine',  # Well-suited for text embeddings
+        n_neighbors=7,
+        min_dist=3,
+        metric='cosine',
         random_state=42
     )
     X_embedded = umap_reducer.fit_transform(X_np)
 
+    # Define clustering parameters to test for HDBSCAN
     params = {
-        "min_cluster_size": [10, 20, 50],
-        "min_samples": [10, 20, 50],
-        "cluster_selection_epsilon": [0.5, 1.0, 2.0],
+        "min_cluster_size": [3, 4, 5, 7, 10, 15, 20, 30, 50, 100],
+        "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 75, 100, 150, 200],
+        "cluster_selection_epsilon": [0.5, 0.8, 1.0, 2.0, 3.0, 5.0],
         "metric": ['euclidean']
     }
 
