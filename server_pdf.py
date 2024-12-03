@@ -168,7 +168,7 @@ def perform_clustering():
     umap_reducer = umap.UMAP(
         n_components=3,
         n_neighbors=7,
-        min_dist=1,
+        min_dist=0.5,
         metric='cosine',
         random_state=42
     )
@@ -178,7 +178,7 @@ def perform_clustering():
     params = {
         "min_cluster_size": [3, 4, 5, 7, 10, 15, 20, 30, 50, 100],
         "min_samples": [4, 5, 7, 10, 15, 20, 30, 50, 75, 100, 150, 200],
-        "cluster_selection_epsilon": [0.5, 0.8, 1.0, 2.0, 3.0, 5.0],
+        "cluster_selection_epsilon": [0.5, 0.8, 1.0, 2.0],
         "metric": ['euclidean']
     }
 
