@@ -332,7 +332,7 @@ def perform_clustering():
         print(f"Size difference between largest and smallest clusters: {size_difference}")
 
         # Check if the largest cluster contains fewer than 200 emails or maximum iterations reached
-        if largest_cluster_size <= 600 or iteration >= max_iterations:
+        if largest_cluster_size <= total_emails*0.2 or iteration >= max_iterations:
             print("Stopping reclustering as conditions are met.")
             break
 
