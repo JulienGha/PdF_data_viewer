@@ -1,0 +1,634 @@
+// Chemin -> Nom -> Utilisateurs + Access depuis Chemin->Groupe
+digraph {
+	node [fillcolor=lightgray shape=box style="rounded,filled"]
+	edge [color=black fontsize=10]
+	rankdir=TB
+	ranksep=10
+	nodesep=2
+	size="8,200!"
+	ratio=expand
+	Admin [label=Admin]
+	"GGS-FS-RW-Admin" [label="GGS-FS-RW-Admin"]
+	Admin -> "GGS-FS-RW-Admin" [label=Ecriture]
+	Admin -> "GGS-FS-RW-Admin"
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin"
+	"GGS-FS-RW-Admin-01-Col" [label="GGS-FS-RW-Admin-01-Col"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-01-Col"
+	"GGS-FS-RW-Admin-01-Col-EF" [label="GGS-FS-RW-Admin-01-Col-EF"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-01-Col-EF"
+	"GGS-FS-RW-Admin-01-Col-BI" [label="GGS-FS-RW-Admin-01-Col-BI"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-01-Col-BI"
+	"GGS-FS-RW-Admin-01-Inv" [label="GGS-FS-RW-Admin-01-Inv"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-01-Inv"
+	"GGS-FS-RW-Admin-02" [label="GGS-FS-RW-Admin-02"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-02"
+	"GGS-FS-RW-Admin-03" [label="GGS-FS-RW-Admin-03"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-03"
+	"GGS-FS-RW-Admin-03-PR" [label="GGS-FS-RW-Admin-03-PR"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-03-PR"
+	"GGS-FS-RW-Admin-10" [label="GGS-FS-RW-Admin-10"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-10"
+	"GGS-FS-RW-Admin-11" [label="GGS-FS-RW-Admin-11"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11"
+	"GGS-FS-RO-Admin-11" [label="GGS-FS-RO-Admin-11"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-11"
+	"GGS-FS-RW-Admin-11-Cha" [label="GGS-FS-RW-Admin-11-Cha"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Cha"
+	"GGS-FS-RW-Admin-11-Chr" [label="GGS-FS-RW-Admin-11-Chr"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Chr"
+	"GGS-FS-RO-Admin-11-Chr" [label="GGS-FS-RO-Admin-11-Chr"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-11-Chr"
+	"GGS-FS-RW-Admin-11-Chr-Eva" [label="GGS-FS-RW-Admin-11-Chr-Eva"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Chr-Eva"
+	"GGS-FS-RW-Admin-11-Chr-Mat" [label="GGS-FS-RW-Admin-11-Chr-Mat"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Chr-Mat"
+	"GGS-FS-RW-Admin-11-Chr-Fra" [label="GGS-FS-RW-Admin-11-Chr-Fra"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Chr-Fra"
+	"GGS-FS-RW-Admin-11-Chr-Men" [label="GGS-FS-RW-Admin-11-Chr-Men"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Chr-Men"
+	"GGS-FS-RW-Admin-11-Chr-Tel" [label="GGS-FS-RW-Admin-11-Chr-Tel"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Chr-Tel"
+	"GGS-FS-RW-Admin-11-Anc" [label="GGS-FS-RW-Admin-11-Anc"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Anc"
+	"GGS-FS-RO-Admin-11-Col" [label="GGS-FS-RO-Admin-11-Col"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-11-Col"
+	"GGS-FS-RW-Admin-11-Pre" [label="GGS-FS-RW-Admin-11-Pre"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-11-Pre"
+	"GGS-FS-RW-Admin-12" [label="GGS-FS-RW-Admin-12"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-12"
+	"GGS-FS-RW-Admin-12-Ces" [label="GGS-FS-RW-Admin-12-Ces"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-12-Ces"
+	"GGS-FS-RW-Admin-14" [label="GGS-FS-RW-Admin-14"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-14"
+	"GGS-FS-RW-Admin-15" [label="GGS-FS-RW-Admin-15"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-15"
+	"GGS-FS-RO-Admin-15" [label="GGS-FS-RO-Admin-15"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-15"
+	"GGS-FS-RW-Admin-16" [label="GGS-FS-RW-Admin-16"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-16"
+	"GGS-FS-RW-Admin-17" [label="GGS-FS-RW-Admin-17"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-17"
+	"GGS-FS-RW-Admin-17-00" [label="GGS-FS-RW-Admin-17-00"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-17-00"
+	"GGS-FS-RW-Admin-17-20" [label="GGS-FS-RW-Admin-17-20"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-17-20"
+	"GGS-FS-RW-Admin-18" [label="GGS-FS-RW-Admin-18"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-18"
+	"GGS-FS-RW-Admin-18-11" [label="GGS-FS-RW-Admin-18-11"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-18-11"
+	"GGS-FS-RW-Admin-18-01" [label="GGS-FS-RW-Admin-18-01"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-18-01"
+	"GGS-FS-RW-Admin-18-01-Med" [label="GGS-FS-RW-Admin-18-01-Med"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-18-01-Med"
+	"GGS-FS-RW-Admin-18-04" [label="GGS-FS-RW-Admin-18-04"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-18-04"
+	"GGS-FS-RO-Admin-18-04" [label="GGS-FS-RO-Admin-18-04"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-18-04"
+	"GGS-FS-RO-Admin-18-05" [label="GGS-FS-RO-Admin-18-05"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-18-05"
+	"GGS-FS-RW-Admin-19" [label="GGS-FS-RW-Admin-19"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-19"
+	"GGS-FS-RW-Admin-20" [label="GGS-FS-RW-Admin-20"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-20"
+	"GGS-FS-RO-Admin-20" [label="GGS-FS-RO-Admin-20"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-20"
+	"GGS-FS-RW-Admin-21" [label="GGS-FS-RW-Admin-21"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-21"
+	"GGS-FS-RW-Admin-22" [label="GGS-FS-RW-Admin-22"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-22"
+	"GGS-FS-RW-Admin-23" [label="GGS-FS-RW-Admin-23"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-23"
+	"GGS-FS-RW-Admin-24" [label="GGS-FS-RW-Admin-24"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-24"
+	"GGS-FS-RW-Admin-25" [label="GGS-FS-RW-Admin-25"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-25"
+	"GGS-FS-RW-Admin-30" [label="GGS-FS-RW-Admin-30"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30"
+	"GGS-FS-RW-Admin-30-Act" [label="GGS-FS-RW-Admin-30-Act"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-Act"
+	"GGS-FS-RO-Admin-30-Act" [label="GGS-FS-RO-Admin-30-Act"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RO-Admin-30-Act"
+	"GGS-FS-RW-Admin-30-Ana" [label="GGS-FS-RW-Admin-30-Ana"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-Ana"
+	"GGS-FS-RW-Admin-30-Bio" [label="GGS-FS-RW-Admin-30-Bio"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-Bio"
+	"GGS-FS-RW-Admin-30-Erg" [label="GGS-FS-RW-Admin-30-Erg"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-Erg"
+	"GGS-FS-RW-Admin-30-Exp" [label="GGS-FS-RW-Admin-30-Exp"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-Exp"
+	"GGS-FS-RW-Admin-30-Rep" [label="GGS-FS-RW-Admin-30-Rep"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-Rep"
+	"GGS-FS-RW-Admin-30-San" [label="GGS-FS-RW-Admin-30-San"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-30-San"
+	"GGS-FS-RW-Admin-31" [label="GGS-FS-RW-Admin-31"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-31"
+	"GGS-FS-RW-Admin-32" [label="GGS-FS-RW-Admin-32"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-32"
+	"GGS-FS-RW-Admin-40" [label="GGS-FS-RW-Admin-40"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-40"
+	"GGS-FS-RW-Admin-41" [label="GGS-FS-RW-Admin-41"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-41"
+	"GGS-FS-RW-Admin-42" [label="GGS-FS-RW-Admin-42"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-42"
+	"GGS-FS-RW-Admin-44" [label="GGS-FS-RW-Admin-44"]
+	"GGS-FS-RW-Admin" -> "GGS-FS-RW-Admin-44"
+	"01_Toises\Colloques direction médicale - chefs d'établissement" [label="01_Toises\Colloques direction médicale - chefs d'établissement"]
+	"01_Toises\Colloques direction médicale - chefs d'établissement" -> "GGS-FS-RW-Admin-01-Col" [label=Ecriture]
+	"01_Toises\Colloques direction médicale - chefs d'établissement" -> "GGS-FS-RW-Admin-01-Col"
+	"GGS-BA-Resp-MedSR" [label="GGS-BA-Resp-MedSR"]
+	"GGS-FS-RW-Admin-01-Col" -> "GGS-BA-Resp-MedSR"
+	"GGS-BA-Direction" [label="GGS-BA-Direction"]
+	"GGS-FS-RW-Admin-01-Col" -> "GGS-BA-Direction"
+	"GGS-BA-Resp-Site" [label="GGS-BA-Resp-Site"]
+	"GGS-FS-RW-Admin-01-Col" -> "GGS-BA-Resp-Site"
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Colloque direction médicale ERO-FGA" [label="01_Toises\Colloques direction médicale - chefs d'établissement\Colloque direction médicale ERO-FGA"]
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Colloque direction médicale ERO-FGA" -> "GGS-FS-RW-Admin-01-Col-EF" [label=Ecriture]
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Colloque direction médicale ERO-FGA" -> "GGS-FS-RW-Admin-01-Col-EF"
+	"GGS-FS-RW-Admin-01-Col-EF" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-01-Col-EF" -> "GGS-BA-Resp-MedSR"
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Bienne" [label="01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Bienne"]
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Bienne" -> "GGS-FS-RW-Admin-01-Col-BI" [label=Ecriture]
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Bienne" -> "GGS-FS-RW-Admin-01-Col-BI"
+	"GGS-FS-RW-Admin-01-Col-BI" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-01-Col-BI" -> "GGS-BA-Resp-MedSR"
+	"GGS-BA-Resp-Site-BI" [label="GGS-BA-Resp-Site-BI"]
+	"GGS-FS-RW-Admin-01-Col-BI" -> "GGS-BA-Resp-Site-BI"
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Neuchâtel" [label="01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Neuchâtel"]
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Neuchâtel" -> "GGS-FS-RW-Admin-01-Col-EF" [label=Ecriture]
+	"01_Toises\Colloques direction médicale - chefs d'établissement\Etablissement Neuchâtel" -> "GGS-FS-RW-Admin-01-Inv"
+	"GGS-BA-Admission" [label="GGS-BA-Admission"]
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-Admission"
+	"GGS-BA-Communication" [label="GGS-BA-Communication"]
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-Communication"
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-Direction"
+	"GGS-BA-IT" [label="GGS-BA-IT"]
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-IT"
+	"GGS-BA-RH" [label="GGS-BA-RH"]
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-RH"
+	"GGS-BA-Ass-Dir" [label="GGS-BA-Ass-Dir"]
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-Ass-Dir"
+	"GGS-BA-Ass-Red" [label="GGS-BA-Ass-Red"]
+	"GGS-FS-RW-Admin-01-Inv" -> "GGS-BA-Ass-Red"
+	"01_Toises\Inventaire des documents" [label="01_Toises\Inventaire des documents"]
+	"01_Toises\Inventaire des documents" -> "GGS-FS-RW-Admin-01-Inv" [label=Ecriture]
+	"01_Toises\Inventaire des documents" -> "GGS-FS-RW-Admin-02"
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Communication"
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Direction"
+	"GGS-BA-Resp-For" [label="GGS-BA-Resp-For"]
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Resp-For"
+	"GGS-BA-Resp-FoPs" [label="GGS-BA-Resp-FoPs"]
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Resp-FoPs"
+	"GGS-BA-Resp-Site-LS" [label="GGS-BA-Resp-Site-LS"]
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Resp-Site-LS"
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Resp-MedSR"
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Ass-Dir"
+	LJN [label=LJN]
+	"GGS-FS-RW-Admin-02" -> LJN
+	SCS [label=SCS]
+	"GGS-FS-RW-Admin-02" -> SCS
+	"GGS-BA-Resp-Fin" [label="GGS-BA-Resp-Fin"]
+	"GGS-FS-RW-Admin-02" -> "GGS-BA-Resp-Fin"
+	"01_Toises\Organigrammes" [label="01_Toises\Organigrammes"]
+	"01_Toises\Organigrammes" -> "GGS-FS-RW-Admin" [label=Ecriture]
+	"01_Toises\Organigrammes" -> "GGS-FS-RW-Admin-03"
+	"GGS-FS-RW-Admin-03" -> "GGS-BA-Direction"
+	"GGS-BA-Finances" [label="GGS-BA-Finances"]
+	"GGS-FS-RW-Admin-03" -> "GGS-BA-Finances"
+	"GGS-FS-RW-Admin-03" -> "GGS-BA-IT"
+	"GGS-FS-RW-Admin-03" -> "GGS-BA-RH"
+	"GGS-BA-Resp-Fac" [label="GGS-BA-Resp-Fac"]
+	"GGS-FS-RW-Admin-03" -> "GGS-BA-Resp-Fac"
+	"02_Formations" [label="02_Formations"]
+	"02_Formations" -> "GGS-FS-RW-Admin-02" [label=Ecriture]
+	"02_Formations" -> "GGS-FS-RW-Admin-03-PR"
+	"GGS-FS-RW-Admin-03-PR" -> "GGS-BA-Admission"
+	"GGS-FS-RW-Admin-03-PR" -> "GGS-BA-Communication"
+	"GGS-BA-Infra" [label="GGS-BA-Infra"]
+	"GGS-FS-RW-Admin-03-PR" -> "GGS-BA-Infra"
+	"03_Centres" [label="03_Centres"]
+	"03_Centres" -> "GGS-FS-RW-Admin-03" [label=Ecriture]
+	"03_Centres" -> "GGS-FS-RW-Admin-10"
+	"GGS-FS-RW-Admin-10" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-10" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-10" -> "GGS-BA-Resp-Fin"
+	"03_Centres\Procédure centralisée" [label="03_Centres\Procédure centralisée"]
+	"GGS-FS-RW-Admin-03-Pro" [label="GGS-FS-RW-Admin-03-Pro"]
+	"03_Centres\Procédure centralisée" -> "GGS-FS-RW-Admin-03-Pro" [label=Ecriture]
+	"03_Centres\Procédure centralisée" -> "GGS-FS-RW-Admin-11"
+	"GGS-FS-RW-Admin-11" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-11" -> "GGS-BA-RH"
+	"GGS-FS-RW-Admin-11" -> "GGS-BA-Resp-MedSR"
+	"GGS-FS-RW-Admin-11" -> "GGS-BA-Ass-Dir"
+	"10_Direction générale" [label="10_Direction générale"]
+	"10_Direction générale" -> "GGS-FS-RW-Admin-10" [label=Ecriture]
+	"10_Direction générale" -> "GGS-FS-RO-Admin-11"
+	"GGS-FS-RO-Admin-11" -> "GGS-BA-Finances"
+	"11_Ressource humaines" [label="11_Ressource humaines"]
+	"11_Ressource humaines" -> "GGS-FS-RW-Admin-11" [label=Ecriture]
+	"11_Ressource humaines" -> "GGS-FS-RW-Admin-11-Cha"
+	"GGS-FS-RW-Admin-11-Cha" -> "GGS-BA-Finances"
+	"11_Ressource humaines" -> "GGS-FS-RO-Admin-11" [label=Lecture]
+	"11_Ressource humaines" -> "GGS-FS-RW-Admin-11-Chr"
+	"GGS-FS-RW-Admin-11-Chr" -> "GGS-BA-Finances"
+	"11_Ressource humaines\CH All" [label="11_Ressource humaines\CH All"]
+	"11_Ressource humaines\CH All" -> "GGS-FS-RW-Admin-11-Cha" [label=Ecriture]
+	"11_Ressource humaines\CH All" -> "GGS-FS-RO-Admin-11-Chr"
+	"GGS-BA-Resp-Med" [label="GGS-BA-Resp-Med"]
+	"GGS-FS-RO-Admin-11-Chr" -> "GGS-BA-Resp-Med"
+	"GGS-BA-Ass-Adm" [label="GGS-BA-Ass-Adm"]
+	"GGS-FS-RO-Admin-11-Chr" -> "GGS-BA-Ass-Adm"
+	"11_Ressource humaines\CH Rom" [label="11_Ressource humaines\CH Rom"]
+	"11_Ressource humaines\CH Rom" -> "GGS-FS-RW-Admin-11-Chr" [label=Ecriture]
+	"11_Ressource humaines\CH Rom" -> "GGS-FS-RW-Admin-11-Chr-Eva"
+	"GGS-FS-RW-Admin-11-Chr-Eva" -> "GGS-BA-Ass-Adm"
+	"11_Ressource humaines\CH Rom" -> "GGS-FS-RO-Admin-11-Chr" [label=Lecture]
+	"11_Ressource humaines\CH Rom" -> "GGS-FS-RW-Admin-11-Chr-Mat"
+	"GGS-BA-Resp-Log" [label="GGS-BA-Resp-Log"]
+	"GGS-FS-RW-Admin-11-Chr-Mat" -> "GGS-BA-Resp-Log"
+	"11_Ressource humaines\CH rom\Evaluations" [label="11_Ressource humaines\CH rom\Evaluations"]
+	"11_Ressource humaines\CH rom\Evaluations" -> "GGS-FS-RW-Admin-11-Chr-Eva" [label=Ecriture]
+	"11_Ressource humaines\CH rom\Evaluations" -> "GGS-FS-RW-Admin-11-Chr-Fra"
+	"GGS-FS-RW-Admin-11-Chr-Fra" -> "GGS-BA-Direction"
+	"GGS-BA-Recrutement" [label="GGS-BA-Recrutement"]
+	"GGS-FS-RW-Admin-11-Chr-Fra" -> "GGS-BA-Recrutement"
+	"11_Ressource humaines\CH rom\Maternité" [label="11_Ressource humaines\CH rom\Maternité"]
+	"11_Ressource humaines\CH rom\Maternité" -> "GGS-FS-RW-Admin-11-Chr-Mat" [label=Ecriture]
+	"11_Ressource humaines\CH rom\Maternité" -> "GGS-FS-RW-Admin-11-Chr-Men"
+	"GGS-FS-RW-Admin-11-Chr-Men" -> "GGS-BA-Communication"
+	"GGS-FS-RW-Admin-11-Chr-Men" -> "GGS-BA-Resp-Med"
+	"11_Ressource humaines\CH rom\Recrutement\France" [label="11_Ressource humaines\CH rom\Recrutement\France"]
+	"11_Ressource humaines\CH rom\Recrutement\France" -> "GGS-FS-RW-Admin-11-Chr-Fra" [label=Ecriture]
+	"11_Ressource humaines\CH rom\Recrutement\France" -> "GGS-FS-RW-Admin-11-Chr-Tel"
+	"GGS-FS-RW-Admin-11-Chr-Tel" -> "GGS-BA-Resp-Site-LS"
+	"GGS-FS-RW-Admin-11-Chr-Tel" -> "GGS-BA-Resp-Log"
+	"GGS-BA-Resp-RH" [label="GGS-BA-Resp-RH"]
+	"GGS-FS-RW-Admin-11-Chr-Tel" -> "GGS-BA-Resp-RH"
+	"GGS-BA-Reception-LS" [label="GGS-BA-Reception-LS"]
+	"GGS-FS-RW-Admin-11-Chr-Tel" -> "GGS-BA-Reception-LS"
+	"GGS-FS-RW-Admin-11-Chr-Tel" -> "GGS-BA-Resp-MedSR"
+	"GGS-BA-Resp-Exp" [label="GGS-BA-Resp-Exp"]
+	"GGS-FS-RW-Admin-11-Chr-Tel" -> "GGS-BA-Resp-Exp"
+	"11_Ressource humaines\CH rom\Recrutement\Profils MENA" [label="11_Ressource humaines\CH rom\Recrutement\Profils MENA"]
+	"11_Ressource humaines\CH rom\Recrutement\Profils MENA" -> "GGS-FS-RW-Admin-11-Chr-Men" [label=Ecriture]
+	"11_Ressource humaines\CH rom\Recrutement\Profils MENA" -> "GGS-FS-RW-Admin-11-Anc"
+	"GGS-FS-RW-Admin-11-Anc" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-11-Anc" -> "GGS-BA-Ass-Dir"
+	"11_Ressource humaines\CH rom\Télétravail" [label="11_Ressource humaines\CH rom\Télétravail"]
+	"11_Ressource humaines\CH rom\Télétravail" -> "GGS-FS-RW-Admin-11-Chr-Tel" [label=Ecriture]
+	"11_Ressource humaines\CH rom\Télétravail" -> "GGS-FS-RO-Admin-11-Col"
+	"GGS-FS-RO-Admin-11-Col" -> "GGS-BA-Resp-Med"
+	"11_Ressource humaines\Dossiers anciens collaborateurs" [label="11_Ressource humaines\Dossiers anciens collaborateurs"]
+	"11_Ressource humaines\Dossiers anciens collaborateurs" -> "GGS-FS-RW-Admin-11-Anc" [label=Ecriture]
+	"11_Ressource humaines\Dossiers anciens collaborateurs" -> "GGS-FS-RW-Admin-11-Pre"
+	AKS [label=AKS]
+	"GGS-FS-RW-Admin-11-Pre" -> AKS
+	"GGS-BA-Resp-Aff" [label="GGS-BA-Resp-Aff"]
+	"GGS-FS-RW-Admin-11-Pre" -> "GGS-BA-Resp-Aff"
+	BBR [label=BBR]
+	"GGS-FS-RW-Admin-11-Pre" -> BBR
+	"GGS-FS-RW-Admin-11-Pre" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-11-Pre" -> "GGS-BA-Resp-MedSR"
+	"GGS-FS-RW-Admin-11-Pre" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-11-Pre" -> "GGS-BA-Ass-Dir"
+	"11_Ressource humaines\Dossiers Collaborateur" [label="11_Ressource humaines\Dossiers Collaborateur"]
+	"11_Ressource humaines\Dossiers Collaborateur" -> "GGS-FS-RO-Admin-11-Col" [label=Lecture]
+	"11_Ressource humaines\Dossiers Collaborateur" -> "GGS-FS-RW-Admin-12"
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Admission"
+	"GGS-BA-Numerisation" [label="GGS-BA-Numerisation"]
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Numerisation"
+	AEV [label=AEV]
+	"GGS-FS-RW-Admin-12" -> AEV
+	AMS [label=AMS]
+	"GGS-FS-RW-Admin-12" -> AMS
+	CGU [label=CGU]
+	"GGS-FS-RW-Admin-12" -> CGU
+	"GGS-BA-Reception" [label="GGS-BA-Reception"]
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Reception"
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Resp-Fac"
+	SMN [label=SMN]
+	"GGS-FS-RW-Admin-12" -> SMN
+	"GGS-FS-RW-Admin-12" -> "GGS-BA-Resp-Fin"
+	"11_Ressource humaines\Prescription" [label="11_Ressource humaines\Prescription"]
+	"11_Ressource humaines\Prescription" -> "GGS-FS-RW-Admin-11-Pre" [label=Ecriture]
+	"11_Ressource humaines\Prescription" -> "GGS-FS-RW-Admin-12-Ces"
+	"GGS-BA-Facturation" [label="GGS-BA-Facturation"]
+	"GGS-FS-RW-Admin-12-Ces" -> "GGS-BA-Facturation"
+	"12_Admission" [label="12_Admission"]
+	"12_Admission" -> "GGS-FS-RW-Admin-12" [label=Ecriture]
+	"12_Admission" -> "GGS-FS-RW-Admin-14"
+	"GGS-FS-RW-Admin-14" -> "GGS-BA-Numerisation"
+	"GGS-BA-Redaction" [label="GGS-BA-Redaction"]
+	"GGS-FS-RW-Admin-14" -> "GGS-BA-Redaction"
+	"GGS-FS-RW-Admin-14" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-14" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-14" -> "GGS-BA-Resp-Fin"
+	"12_Admission\Cession de créances" [label="12_Admission\Cession de créances"]
+	"12_Admission\Cession de créances" -> "GGS-FS-RW-Admin-12-Ces" [label=Ecriture]
+	"12_Admission\Cession de créances" -> "GGS-FS-RW-Admin-15"
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Facturation"
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Finances"
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Numerisation"
+	"GGS-BA-Resp-Rec" [label="GGS-BA-Resp-Rec"]
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Resp-Rec"
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Resp-Exp"
+	"GGS-BA-Fin-Sta" [label="GGS-BA-Fin-Sta"]
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Fin-Sta"
+	"GGS-BA-Recouvrement" [label="GGS-BA-Recouvrement"]
+	"GGS-FS-RW-Admin-15" -> "GGS-BA-Recouvrement"
+	SGA [label=SGA]
+	"GGS-FS-RW-Admin-15" -> SGA
+	"14_Rapport & rédaction" [label="14_Rapport & rédaction"]
+	"14_Rapport & rédaction" -> "GGS-FS-RW-Admin-14" [label=Ecriture]
+	"14_Rapport & rédaction" -> "GGS-FS-RO-Admin-15"
+	"GGS-FS-RO-Admin-15" -> "GGS-BA-Resp-Aff"
+	"15_Facturation" [label="15_Facturation"]
+	"15_Facturation" -> "GGS-FS-RW-Admin-15" [label=Ecriture]
+	"15_Facturation" -> "GGS-FS-RW-Admin-16"
+	"GGS-FS-RW-Admin-16" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-16" -> "GGS-BA-Finances"
+	"GGS-BA-Resp-Pbi" [label="GGS-BA-Resp-Pbi"]
+	"GGS-FS-RW-Admin-16" -> "GGS-BA-Resp-Pbi"
+	"15_Facturation" -> "GGS-FS-RO-Admin-15" [label=Lecture]
+	"15_Facturation" -> "GGS-FS-RW-Admin-17"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Communication"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Resp-Aff"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Ass-Dir"
+	"GGS-BA-Intranet" [label="GGS-BA-Intranet"]
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Intranet"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Resp-Pbi"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Ass-Adm"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Resp-Fin"
+	"GGS-FS-RW-Admin-17" -> "GGS-BA-Resp-Med"
+	"16_Finances" [label="16_Finances"]
+	"16_Finances" -> "GGS-FS-RW-Admin-16" [label=Ecriture]
+	"16_Finances" -> "GGS-FS-RW-Admin-17-00"
+	"GGS-FS-RW-Admin-17-00" -> "GGS-FS-RW-Admin"
+	"17_Communication" [label="17_Communication"]
+	"17_Communication" -> "GGS-FS-RW-Admin-17" [label=Ecriture]
+	"17_Communication" -> "GGS-FS-RW-Admin-17-20"
+	"GGS-FS-RW-Admin-17-20" -> "GGS-BA-Communication"
+	"GGS-FS-RW-Admin-17-20" -> "GGS-BA-Resp-Aff"
+	"GGS-FS-RW-Admin-17-20" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-17-20" -> "GGS-BA-Resp-Med"
+	"17_Communication\00 Charte Graphique+Outils+Modèles" [label="17_Communication\00 Charte Graphique+Outils+Modèles"]
+	"GGS-FS-RW-Admin-17-00-01" [label="GGS-FS-RW-Admin-17-00-01"]
+	"17_Communication\00 Charte Graphique+Outils+Modèles" -> "GGS-FS-RW-Admin-17-00-01" [label=Ecriture]
+	"17_Communication\00 Charte Graphique+Outils+Modèles" -> "GGS-FS-RW-Admin-18"
+	"GGS-FS-RW-Admin-18" -> "GGS-BA-IT"
+	"17_Communication\01 Documents officiels" [label="17_Communication\01 Documents officiels"]
+	"17_Communication\01 Documents officiels" -> "GGS-FS-RW-Admin-17-00-01" [label=Ecriture]
+	"17_Communication\01 Documents officiels" -> "GGS-FS-RW-Admin-18-11"
+	"GGS-FS-RW-Admin-18-11" -> "GGS-BA-Finances"
+	"17_Communication\20 Projets\Les Toises International\Documents officiels" [label="17_Communication\20 Projets\Les Toises International\Documents officiels"]
+	"17_Communication\20 Projets\Les Toises International\Documents officiels" -> "GGS-FS-RW-Admin-17-20" [label=Ecriture]
+	"17_Communication\20 Projets\Les Toises International\Documents officiels" -> "GGS-FS-RW-Admin-18-01"
+	"GGS-BA-Developpement" [label="GGS-BA-Developpement"]
+	"GGS-FS-RW-Admin-18-01" -> "GGS-BA-Developpement"
+	"18_Informatique" [label="18_Informatique"]
+	"18_Informatique" -> "GGS-FS-RW-Admin-18" [label=Ecriture]
+	"18_Informatique" -> "GGS-FS-RW-Admin-18-01-Med"
+	"GGS-FS-RW-Admin-18-01-Med" -> "GGS-BA-Developpement"
+	"GGS-FS-RW-Admin-18-01-Med" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-18-01-Med" -> "GGS-BA-Resp-Rec"
+	"GGS-FS-RW-Admin-18-01-Med" -> "GGS-BA-Direction"
+	"18_Informatique\11_Finance" [label="18_Informatique\11_Finance"]
+	"18_Informatique\11_Finance" -> "GGS-FS-RW-Admin-18-11" [label=Ecriture]
+	"18_Informatique\11_Finance" -> "GGS-FS-RW-Admin-18-04"
+	"GGS-FS-RW-Admin-18-04" -> "GGS-BA-Resp-Aff"
+	"GGS-FS-RW-Admin-18-04" -> "GGS-BA-Developpement"
+	"GGS-FS-RW-Admin-18-04" -> "GGS-BA-Facturation"
+	"18_Informatique\1_Développement" [label="18_Informatique\1_Développement"]
+	"18_Informatique\1_Développement" -> "GGS-FS-RW-Admin-18-01" [label=Ecriture]
+	"18_Informatique\1_Développement" -> "GGS-FS-RO-Admin-18-04"
+	"GGS-FS-RO-Admin-18-04" -> "GGS-BA-Communication"
+	"18_Informatique\1_Développement\Medula\Agenda\specs fonctionnelles" [label="18_Informatique\1_Développement\Medula\Agenda\specs fonctionnelles"]
+	"18_Informatique\1_Développement\Medula\Agenda\specs fonctionnelles" -> "GGS-FS-RW-Admin-18-01-Med" [label=Ecriture]
+	"18_Informatique\1_Développement\Medula\Agenda\specs fonctionnelles" -> "GGS-FS-RO-Admin-18-05"
+	"GGS-FS-RO-Admin-18-05" -> "GGS-BA-Resp-Aff"
+	"GGS-FS-RO-Admin-18-05" -> "GGS-BA-Developpement"
+	"GGS-FS-RO-Admin-18-05" -> "GGS-BA-Facturation"
+	"GGS-FS-RO-Admin-18-05" -> "GGS-BA-Resp-Med"
+	"18_Informatique\4_Fact - Admin" [label="18_Informatique\4_Fact - Admin"]
+	"18_Informatique\4_Fact - Admin" -> "GGS-FS-RW-Admin-18-04" [label=Ecriture]
+	"18_Informatique\4_Fact - Admin" -> "GGS-FS-RW-Admin-19"
+	"GGS-FS-RW-Admin-19" -> "GGS-BA-Numerisation"
+	"GGS-FS-RW-Admin-19" -> "GGS-BA-Resp-Fin"
+	"18_Informatique\4_Fact - Admin" -> "GGS-FS-RO-Admin-18-04" [label=Lecture]
+	"18_Informatique\4_Fact - Admin" -> "GGS-FS-RW-Admin-20"
+	"GGS-FS-RW-Admin-20" -> "GGS-BA-Resp-Fin"
+	"GGS-FS-RW-Admin-20" -> "GGS-BA-Resp-Exp"
+	"18_Informatique\5_Les_Toises_Internationales" [label="18_Informatique\5_Les_Toises_Internationales"]
+	"18_Informatique\5_Les_Toises_Internationales" -> "GGS-FS-RO-Admin-18-05" [label=Ecriture]
+	"18_Informatique\5_Les_Toises_Internationales" -> "GGS-FS-RO-Admin-20"
+	"GGS-FS-RO-Admin-20" -> "GGS-FS-RW-Admin"
+	"19_Archivage" [label="19_Archivage"]
+	"19_Archivage" -> "GGS-FS-RW-Admin-19" [label=Ecriture]
+	"19_Archivage" -> "GGS-FS-RW-Admin-21"
+	"GGS-BA-Resp-Num" [label="GGS-BA-Resp-Num"]
+	"GGS-FS-RW-Admin-21" -> "GGS-BA-Resp-Num"
+	"GGS-BA-Archive" [label="GGS-BA-Archive"]
+	"GGS-FS-RW-Admin-21" -> "GGS-BA-Archive"
+	"GGS-FS-RW-Admin-21" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-21" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-21" -> "GGS-BA-Resp-Fin"
+	"20_Qualité" [label="20_Qualité"]
+	"20_Qualité" -> "GGS-FS-RW-Admin-20" [label=Ecriture]
+	"20_Qualité" -> "GGS-FS-RW-Admin-22"
+	"GGS-BA-Recherche" [label="GGS-BA-Recherche"]
+	"GGS-FS-RW-Admin-22" -> "GGS-BA-Recherche"
+	"GGS-BA-Resp-Inf" [label="GGS-BA-Resp-Inf"]
+	"GGS-FS-RW-Admin-22" -> "GGS-BA-Resp-Inf"
+	"GGS-FS-RW-Admin-22" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-22" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-22" -> "GGS-BA-Resp-Fin"
+	"20_Qualité" -> "GGS-FS-RO-Admin-20" [label=Lecture]
+	"20_Qualité" -> "GGS-FS-RW-Admin-23"
+	"GGS-FS-RW-Admin-23" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-23" -> "GGS-BA-RH"
+	"GGS-FS-RW-Admin-23" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-23" -> "GGS-BA-Resp-MedSR"
+	"GGS-FS-RW-Admin-23" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-23" -> "GGS-BA-Resp-Fin"
+	"21_Service juridique" [label="21_Service juridique"]
+	"21_Service juridique" -> "GGS-FS-RW-Admin-21" [label=Ecriture]
+	"21_Service juridique" -> "GGS-FS-RW-Admin-24"
+	"GGS-FS-RW-Admin-24" -> "GGS-BA-Developpement"
+	"GGS-FS-RW-Admin-24" -> "GGS-BA-Resp-Fin"
+	"22_Recherche" [label="22_Recherche"]
+	"22_Recherche" -> "GGS-FS-RW-Admin-22" [label=Ecriture]
+	"22_Recherche" -> "GGS-FS-RW-Admin-25"
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Redaction"
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Resp-Rec"
+	AES [label=AES]
+	"GGS-FS-RW-Admin-25" -> AES
+	"GGS-BA-Resp-Site-FR" [label="GGS-BA-Resp-Site-FR"]
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Resp-Site-FR"
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Resp-Exp"
+	"GGS-BA-Resp-MedC" [label="GGS-BA-Resp-MedC"]
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Resp-MedC"
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Resp-MedSR"
+	"GGS-FS-RW-Admin-25" -> "GGS-BA-Direction"
+	IZA [label=IZA]
+	"GGS-FS-RW-Admin-25" -> IZA
+	JCL [label=JCL]
+	"GGS-FS-RW-Admin-25" -> JCL
+	JGH [label=JGH]
+	"GGS-FS-RW-Admin-25" -> JGH
+	MMN [label=MMN]
+	"GGS-FS-RW-Admin-25" -> MMN
+	OPA [label=OPA]
+	"GGS-FS-RW-Admin-25" -> OPA
+	PKA [label=PKA]
+	"GGS-FS-RW-Admin-25" -> PKA
+	RBG [label=RBG]
+	"GGS-FS-RW-Admin-25" -> RBG
+	SNA [label=SNA]
+	"GGS-FS-RW-Admin-25" -> SNA
+	"GGS-FS-RW-Admin-25" -> SCS
+	"23_Recrutement" [label="23_Recrutement"]
+	"23_Recrutement" -> "GGS-FS-RW-Admin-23" [label=Ecriture]
+	"23_Recrutement" -> "GGS-FS-RW-Admin-30"
+	"GGS-FS-RW-Admin-30" -> "GGS-BA-Numerisation"
+	"GGS-FS-RW-Admin-30" -> "GGS-BA-Resp-Inf"
+	"GGS-FS-RW-Admin-30" -> "GGS-BA-Resp-Fin"
+	"GGS-BA-Resp-MedE" [label="GGS-BA-Resp-MedE"]
+	"GGS-FS-RW-Admin-30" -> "GGS-BA-Resp-MedE"
+	"GGS-FS-RW-Admin-30" -> "GGS-BA-Resp-Exp"
+	CRO [label=CRO]
+	"GGS-FS-RW-Admin-30" -> CRO
+	CCH [label=CCH]
+	"GGS-FS-RW-Admin-30" -> CCH
+	"24_Développement" [label="24_Développement"]
+	"24_Développement" -> "GGS-FS-RW-Admin-24" [label=Ecriture]
+	"24_Développement" -> "GGS-FS-RW-Admin-30-Act"
+	"GGS-FS-RW-Admin-30-Act" -> AEV
+	AGI [label=AGI]
+	"GGS-FS-RW-Admin-30-Act" -> AGI
+	"GGS-FS-RW-Admin-30-Act" -> "GGS-BA-Recherche"
+	"GGS-FS-RW-Admin-30-Act" -> "GGS-BA-Resp-Site-FR"
+	"GGS-BA-Resp-Css" [label="GGS-BA-Resp-Css"]
+	"GGS-FS-RW-Admin-30-Act" -> "GGS-BA-Resp-Css"
+	FSS [label=FSS]
+	"GGS-FS-RW-Admin-30-Act" -> FSS
+	FLA [label=FLA]
+	"GGS-FS-RW-Admin-30-Act" -> FLA
+	"GGS-FS-RW-Admin-30-Act" -> "GGS-BA-Direction"
+	HBE [label=HBE]
+	"GGS-FS-RW-Admin-30-Act" -> HBE
+	JPL [label=JPL]
+	"GGS-FS-RW-Admin-30-Act" -> JPL
+	JKO [label=JKO]
+	"GGS-FS-RW-Admin-30-Act" -> JKO
+	"GGS-FS-RW-Admin-30-Act" -> LJN
+	MTI [label=MTI]
+	"GGS-FS-RW-Admin-30-Act" -> MTI
+	MOT [label=MOT]
+	"GGS-FS-RW-Admin-30-Act" -> MOT
+	MPS [label=MPS]
+	"GGS-FS-RW-Admin-30-Act" -> MPS
+	MMR [label=MMR]
+	"GGS-FS-RW-Admin-30-Act" -> MMR
+	NBE [label=NBE]
+	"GGS-FS-RW-Admin-30-Act" -> NBE
+	PVB [label=PVB]
+	"GGS-FS-RW-Admin-30-Act" -> PVB
+	PCA [label=PCA]
+	"GGS-FS-RW-Admin-30-Act" -> PCA
+	TDL [label=TDL]
+	"GGS-FS-RW-Admin-30-Act" -> TDL
+	"25_IA" [label="25_IA"]
+	"25_IA" -> "GGS-FS-RW-Admin-25" [label=Ecriture]
+	"25_IA" -> "GGS-FS-RO-Admin-30-Act"
+	"GGS-FS-RO-Admin-30-Act" -> "GGS-BA-Resp-Site-LS"
+	"30_Services cliniques" [label="30_Services cliniques"]
+	"30_Services cliniques" -> "GGS-FS-RW-Admin-30" [label=Ecriture]
+	"30_Services cliniques" -> "GGS-FS-RW-Admin-30-Ana"
+	"GGS-FS-RW-Admin-30-Ana" -> "GGS-BA-Developpement"
+	"30_Services cliniques\Actimétrie" [label="30_Services cliniques\Actimétrie"]
+	"30_Services cliniques\Actimétrie" -> "GGS-FS-RW-Admin-30-Act" [label=Ecriture]
+	"30_Services cliniques\Actimétrie" -> "GGS-FS-RW-Admin-30-Bio"
+	"GGS-FS-RW-Admin-30-Bio" -> "GGS-BA-Recherche"
+	"30_Services cliniques\Actimétrie" -> "GGS-FS-RO-Admin-30-Act" [label=Lecture]
+	"30_Services cliniques\Actimétrie" -> "GGS-FS-RW-Admin-30-Erg"
+	"GGS-FS-RW-Admin-30-Erg" -> "GGS-BA-Developpement"
+	"30_Services cliniques\Analyses médicales" [label="30_Services cliniques\Analyses médicales"]
+	"30_Services cliniques\Analyses médicales" -> "GGS-FS-RW-Admin-30-Ana" [label=Ecriture]
+	"30_Services cliniques\Analyses médicales" -> "GGS-FS-RW-Admin-30-Exp"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Numerisation"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Resp-Inf"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Resp-Fin"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Resp-Exp"
+	"GGS-BA-Resp-Qua" [label="GGS-BA-Resp-Qua"]
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Resp-Qua"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-30-Exp" -> "GGS-BA-Resp-Fac"
+	"30_Services cliniques\Biomarqueurs" [label="30_Services cliniques\Biomarqueurs"]
+	"30_Services cliniques\Biomarqueurs" -> "GGS-FS-RW-Admin-30-Bio" [label=Ecriture]
+	"30_Services cliniques\Biomarqueurs" -> "GGS-FS-RW-Admin-30-Rep"
+	"GGS-FS-RW-Admin-30-Rep" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-30-Rep" -> "GGS-BA-Resp-Qua"
+	"GGS-FS-RW-Admin-30-Rep" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-30-Rep" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-30-Rep" -> "GGS-BA-Resp-Fac"
+	"30_Services cliniques\Ergotherapie" [label="30_Services cliniques\Ergotherapie"]
+	"30_Services cliniques\Ergotherapie" -> "GGS-FS-RW-Admin-30-Erg" [label=Ecriture]
+	"30_Services cliniques\Ergotherapie" -> "GGS-FS-RW-Admin-30-San"
+	Recherche [label=Recherche]
+	"GGS-FS-RW-Admin-30-San" -> Recherche
+	"GGS-FS-RW-Admin-30-San" -> "GGS-BA-Recherche"
+	"30_Services cliniques\Expertises" [label="30_Services cliniques\Expertises"]
+	"30_Services cliniques\Expertises" -> "GGS-FS-RW-Admin-30-Exp" [label=Ecriture]
+	"30_Services cliniques\Expertises" -> "GGS-FS-RW-Admin-31"
+	"GGS-FS-RW-Admin-31" -> "GGS-BA-Communication"
+	"GGS-FS-RW-Admin-31" -> "GGS-BA-Numerisation"
+	"GGS-FS-RW-Admin-31" -> "GGS-BA-Resp-Fin"
+	"30_Services cliniques\Réplication" [label="30_Services cliniques\Réplication"]
+	"30_Services cliniques\Réplication" -> "GGS-FS-RW-Admin-30-Rep" [label=Ecriture]
+	"30_Services cliniques\Réplication" -> "GGS-FS-RW-Admin-32"
+	"Centre de jour" [label="Centre de jour"]
+	"GGS-FS-RW-Admin-32" -> "Centre de jour"
+	"GGS-FS-RW-Admin-32" -> "GGS-BA-Numerisation"
+	"GGS-FS-RW-Admin-32" -> "GGS-BA-Resp-Fin"
+	"30_Services cliniques\Santé hépatique" [label="30_Services cliniques\Santé hépatique"]
+	"30_Services cliniques\Santé hépatique" -> "GGS-FS-RW-Admin-30-San" [label=Ecriture]
+	"30_Services cliniques\Santé hépatique" -> "GGS-FS-RW-Admin-40"
+	"GGS-FS-RW-Admin-40" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-40" -> "GGS-BA-Resp-Fin"
+	"31_Groupes ambulatoires" [label="31_Groupes ambulatoires"]
+	"31_Groupes ambulatoires" -> "GGS-FS-RW-Admin-31" [label=Ecriture]
+	"31_Groupes ambulatoires" -> "GGS-FS-RW-Admin-41"
+	"GGS-FS-RW-Admin-41" -> "GGS-BA-Finances"
+	"GGS-FS-RW-Admin-41" -> "GGS-BA-Resp-Log"
+	"32_Centre de jour" [label="32_Centre de jour"]
+	"32_Centre de jour" -> "GGS-FS-RW-Admin-32" [label=Ecriture]
+	"32_Centre de jour" -> "GGS-FS-RW-Admin-42"
+	"GGS-FS-RW-Admin-42" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-42" -> "GGS-BA-Ass-Dir"
+	"GGS-FS-RW-Admin-42" -> "GGS-BA-Resp-Fin"
+	"40_Comité de direction" [label="40_Comité de direction"]
+	"40_Comité de direction" -> "GGS-FS-RW-Admin-40" [label=Ecriture]
+	"40_Comité de direction" -> "GGS-FS-RW-Admin-44"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Resp-Num"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Resp-Exp"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Resp-MedSR"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Resp-Qua"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Direction"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Resp-Fac"
+	"GGS-FS-RW-Admin-44" -> "GGS-BA-Resp-Fin"
+	"41_Achats" [label="41_Achats"]
+	"41_Achats" -> "GGS-FS-RW-Admin-41" [label=Ecriture]
+	nan [label=nan]
+	"41_Achats" -> nan
+	nan -> nan
+	"42_Assurances" [label="42_Assurances"]
+	"42_Assurances" -> "GGS-FS-RW-Admin-42" [label=Ecriture]
+	"42_Assurances" -> nan
+	"44_Plaintes" [label="44_Plaintes"]
+	"44_Plaintes" -> "GGS-FS-RW-Admin-44" [label=Ecriture]
+	"44_Plaintes" -> nan
+}

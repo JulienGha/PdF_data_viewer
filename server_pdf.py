@@ -91,7 +91,6 @@ def preprocess_text(text, author_name):
     return ' '.join(tokens)
 
 # Function to perform clustering and generate visualizations
-# Function to perform clustering and generate visualizations
 def perform_clustering():
     global df_emails, cluster_names, fig_json, X_embedded, cluster_keywords
 
