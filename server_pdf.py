@@ -241,6 +241,9 @@ def perform_clustering():
     pd.set_option('display.width', 1000)
     pd.set_option('display.colheader_justify', 'center')
 
+    # Set float format for better epsilon display
+    pd.options.display.float_format = '{:,.4f}'.format
+
     # Display options in console
     results_df = pd.DataFrame(results)
     print("\nAvailable Clustering Configurations:")
@@ -583,7 +586,7 @@ def perform_clustering():
     if not cluster_counts_named.empty:
         largest_cluster = cluster_counts_named.loc[cluster_counts_named['Count'].idxmax()]
         # Check if the largest cluster exceeds 25% of the total emails
-        if largest_cluster['Count'] / total_emails > 0.25:
+        if largest_cluster['Count'] / total_emails > 0.20:
             # Exclude the largest cluster
             cluster_counts_named_filtered = cluster_counts_named[
                 cluster_counts_named['Cluster_Name_Reclassified'] != largest_cluster['Cluster_Name_Reclassified']
@@ -630,7 +633,7 @@ def perform_clustering():
         y=X_embedded[:, 1],
         z=X_embedded[:, 2],
         color='Cluster_Name_Final',
-        hover_data=['Subject', 'FileName', 'Author'],
+        hover_data=['Subject', 'FileName', 'Author', 'Email'],
         title='Email Clusters Visualized in 3D Space After Iterative Reclustering'
     )
 
