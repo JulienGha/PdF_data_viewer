@@ -355,9 +355,9 @@ def perform_clustering():
 
         # Define new clustering parameters for reclustering
         recluster_params = {
-            "min_cluster_size": [3, 4, 5, 7, 10],
-            "min_samples": [1, 2, 3, 4],
-            "cluster_selection_epsilon": [0.5, 1.0, 2.0],
+            "min_cluster_size": [3, 4, 5, 6, 7, 10],
+            "min_samples": [1, 2, 3, 4, 5, 6, 7, 8],
+            "cluster_selection_epsilon": [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9, 1.0, 2.0],
             "metric": ['euclidean']
         }
 
@@ -559,6 +559,7 @@ def perform_clustering():
     # Plot the number of emails sent by each author (only those who sent more than 5 emails)
     author_counts = df_emails['Author'].value_counts()
     author_counts_filtered = author_counts[author_counts > 5]
+    author_counts_filtered=author_counts_filtered[:20]
 
     plt.figure(figsize=(12, 6))
     author_counts_filtered.plot(kind='bar')
@@ -684,8 +685,7 @@ def clusters():
         largest_cluster_name = cluster_counts.loc[cluster_counts['Count'].idxmax(), 'Cluster_Name_Final']
         largest_cluster_count = cluster_counts['Count'].max()
 
-        # Check if the largest cluster exceeds 25% of the total emails
-        if largest_cluster_count / total_emails > 0.25:
+        if largest_cluster_count / total_emails > 0.20:
             # Exclude the largest cluster
             cluster_counts_filtered = cluster_counts[cluster_counts['Cluster_Name_Final'] != largest_cluster_name]
             print(f"Excluding largest cluster: {largest_cluster_name} with {largest_cluster_count} emails.")
