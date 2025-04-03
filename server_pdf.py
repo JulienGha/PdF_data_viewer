@@ -717,7 +717,7 @@ def clusters():
             y=X_embedded[:, 1],
             z=X_embedded[:, 2],
             color='Cluster_Name_Final',
-            hover_data=['Subject', 'FileName', 'Author'],
+            hover_data=['Subject', 'FileName', 'Author', 'Email'],
             title='Visualisation des Catégories d\'Emails en 3D (Après Renommage)'
         )
         fig.update_traces(marker=dict(size=5))
