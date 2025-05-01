@@ -584,19 +584,6 @@ def perform_clustering():
 
     # Identify the largest cluster
     if not cluster_counts_named.empty:
-        largest_cluster = cluster_counts_named.loc[cluster_counts_named['Count'].idxmax()]
-        # Check if the largest cluster exceeds 25% of the total emails
-        if largest_cluster['Count'] / total_emails > 0.20:
-            # Exclude the largest cluster
-            cluster_counts_named_filtered = cluster_counts_named[
-                cluster_counts_named['Cluster_Name_Reclassified'] != largest_cluster['Cluster_Name_Reclassified']
-            ]
-            print(
-                f"Excluding largest cluster: {largest_cluster['Cluster_Name_Reclassified']} "
-                f"with {largest_cluster['Count']} emails."
-            )
-        else:
-            # Include all clusters if no cluster exceeds the threshold
             cluster_counts_named_filtered = cluster_counts_named
     else:
         cluster_counts_named_filtered = cluster_counts_named
