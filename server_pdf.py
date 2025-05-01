@@ -697,6 +697,12 @@ def clusters():
         plt.savefig('static/emails_per_cluster_reclassified.png')
         plt.close()
 
+        def insert_newlines(text, words_per_line=10):
+            words = text.split()
+            return '\n'.join([' '.join(words[i:i + words_per_line]) for i in range(0, len(words), words_per_line)])
+
+        df_emails['Email'] = df_emails['Email'].astype(str).apply(insert_newlines)
+
         # Update the 3D scatter plot
         fig = px.scatter_3d(
             df_emails,
