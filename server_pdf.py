@@ -664,6 +664,13 @@ def clusters():
         df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
         df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
 
+        # Insert newlines into long emails to improve hover readability
+        def insert_newlines(text, words_per_line=10):
+            words = text.split()
+            return '\n'.join([' '.join(words[i:i + words_per_line]) for i in range(0, len(words), words_per_line)])
+
+        df_emails['Email'] = df_emails['Email'].astype(str).apply(insert_newlines)
+
         # Group by cluster name and count the number of emails per cluster
         cluster_counts = df_emails['Cluster_Name_Final'].value_counts().reset_index()
         cluster_counts.columns = ['Cluster_Name_Final', 'Count']
@@ -696,12 +703,6 @@ def clusters():
         plt.tight_layout()
         plt.savefig('static/emails_per_cluster_reclassified.png')
         plt.close()
-
-        def insert_newlines(text, words_per_line=10):
-            words = text.split()
-            return '\n'.join([' '.join(words[i:i + words_per_line]) for i in range(0, len(words), words_per_line)])
-
-        df_emails['Email'] = df_emails['Email'].astype(str).apply(insert_newlines)
 
         # Update the 3D scatter plot
         fig = px.scatter_3d(
