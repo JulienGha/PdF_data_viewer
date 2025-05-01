@@ -620,7 +620,7 @@ def perform_clustering():
         y=X_embedded[:, 1],
         z=X_embedded[:, 2],
         color='Cluster_Name_Final',
-        hover_data=['Subject', 'FileName', 'Author', 'Email'],
+        hover_data=['Subject', 'FileName', 'Author'],
         title='Email Clusters Visualized in 3D Space After Iterative Reclustering'
     )
 
@@ -668,12 +668,6 @@ def clusters():
         cluster_counts = df_emails['Cluster_Name_Final'].value_counts().reset_index()
         cluster_counts.columns = ['Cluster_Name_Final', 'Count']
 
-        def insert_newlines_limited(text, words_per_line=5, max_words=50):
-            words = text.split()[:max_words]
-            return '\n'.join([' '.join(words[i:i + words_per_line]) for i in range(0, len(words), words_per_line)])
-
-        df_emails['Email'] = df_emails['Email'].astype(str).apply(insert_newlines_limited)
-
         # Calculate the total number of emails
         total_emails = cluster_counts['Count'].sum()
 
@@ -710,7 +704,7 @@ def clusters():
             y=X_embedded[:, 1],
             z=X_embedded[:, 2],
             color='Cluster_Name_Final',
-            hover_data=['Subject', 'FileName', 'Author', 'Email'],
+            hover_data=['Subject', 'FileName', 'Author'],
             title='Visualisation des Catégories d\'Emails en 3D (Après Renommage)'
         )
         fig.update_traces(marker=dict(size=5))
