@@ -8,3 +8,4 @@ static/*
 clustering_results.csv
 clustering_results_dbscan.csv
 static
+zero_shot_predictions.csv
