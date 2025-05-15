@@ -5,12 +5,14 @@ import joblib
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from sentence_transformers import SentenceTransformer
+
+embedder = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
 
 MAIL_DIR = "/home/administrator/mail_infra"
 STATIC_IMG_DIR = "static/images"
 os.makedirs(STATIC_IMG_DIR, exist_ok=True)
 
-embedder = joblib.load("embedder.joblib")
 clf      = joblib.load("email_classifier.joblib")
 
 app = Flask(__name__)
