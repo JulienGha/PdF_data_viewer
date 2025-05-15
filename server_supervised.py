@@ -94,7 +94,7 @@ def index():
     plt.close()
 
     auth_counts = df["Author"].value_counts()
-    top_authors = auth_counts.index[:5]
+    top_authors = auth_counts.index[:20]
 
     pie_info = []
     for author in top_authors:
