@@ -471,11 +471,6 @@ def perform_clustering():
 
         iteration += 1
 
-    # --------------------------
-    # Reclassification Step
-    # --------------------------
-
-    # Compute centroids for each cluster
     email_embeddings = X_np
     cluster_centroids = {}
     for cluster in cluster_indices:
@@ -484,7 +479,6 @@ def perform_clustering():
         centroid = cluster_embeddings.mean(axis=0)
         cluster_centroids[cluster] = centroid
 
-    # Precompute distances of all points to their nearest centroid
     all_distances = []
     for embedding in email_embeddings:
         min_distance = float('inf')
@@ -494,7 +488,6 @@ def perform_clustering():
                 min_distance = distance
         all_distances.append(min_distance)
 
-    # Remove NaN values from all_distances
     all_distances = [d for d in all_distances if not np.isnan(d)]
 
     if all_distances:
@@ -504,11 +497,9 @@ def perform_clustering():
         print("No valid distances found. Setting max_distance_threshold to default value.")
         max_distance_threshold = 0
 
-    # Get indices of noise emails
     noise_indices = df_emails[df_emails['Cluster'] == -1].index
     noise_embeddings = email_embeddings[noise_indices]
 
-    # Compute density of each cluster (number of points per cluster volume)
     cluster_density = {}
     for cluster, centroid in cluster_centroids.items():
         cluster_points = email_embeddings[cluster_indices[cluster]]
@@ -518,18 +509,16 @@ def perform_clustering():
         else:
             print(f"Cluster {cluster} has no points.")
 
-    # Handle empty cluster_density
     if cluster_density:
         density_threshold = np.percentile(list(cluster_density.values()), 10)
     else:
         print("No clusters to compute density threshold.")
         density_threshold = 0
 
-    # Assign noise points only to sufficiently dense clusters
     reclassified_clusters = []
     for idx, noise_embedding in zip(noise_indices, noise_embeddings):
         min_distance = float('inf')
-        assigned_cluster = -1  # Default is noise
+        assigned_cluster = -1
         closest_cluster = -1
         for cluster, centroid in cluster_centroids.items():
             distance = np.linalg.norm(noise_embedding - centroid)
@@ -542,24 +531,15 @@ def perform_clustering():
             assigned_cluster = -1  # Remain as noise
         reclassified_clusters.append(assigned_cluster)
 
-    # Update cluster labels for reclassified emails
     df_emails.loc[noise_indices, 'Cluster_Reclassified'] = reclassified_clusters
 
-    # For emails that couldn't be reclassified, keep them as noise
     df_emails['Cluster_Reclassified'] = df_emails['Cluster_Reclassified'].fillna(df_emails['Cluster'])
 
-    # Convert 'Cluster_Reclassified' to integers
     df_emails['Cluster_Reclassified'] = df_emails['Cluster_Reclassified'].astype(int)
 
-    # Update cluster names for reclassified clusters
     df_emails['Cluster_Name_Reclassified'] = df_emails['Cluster_Reclassified'].map(cluster_names)
     df_emails['Cluster_Name_Reclassified'] = df_emails['Cluster_Name_Reclassified'].fillna('Noise')
 
-    # --------------------------
-    # Save Matplotlib Plots as Images
-    # --------------------------
-
-    # Plot the number of emails sent by each author (only those who sent more than 5 emails)
     author_counts = df_emails['Author'].value_counts()
     author_counts_filtered = author_counts[author_counts > 5]
     author_counts_filtered=author_counts_filtered[:20]
@@ -574,24 +554,19 @@ def perform_clustering():
     plt.savefig('static/emails_per_author.png')
     plt.close()
 
-    # Group by cluster name and count the number of emails per cluster
     cluster_counts_named = df_emails.groupby(
         ['Cluster_Reclassified', 'Cluster_Name_Reclassified']
     ).size().reset_index(name='Count')
 
-    # Calculate the total number of emails
     total_emails = cluster_counts_named['Count'].sum()
 
-    # Identify the largest cluster
     if not cluster_counts_named.empty:
             cluster_counts_named_filtered = cluster_counts_named
     else:
         cluster_counts_named_filtered = cluster_counts_named
 
-    # Further filter to the top 30 largest clusters
     cluster_counts_named_filtered = cluster_counts_named_filtered.nlargest(30, 'Count')
 
-    # Plot the filtered data
     plt.figure(figsize=(10, 6))
     plt.bar(
         cluster_counts_named_filtered['Cluster_Name_Reclassified'],
@@ -605,15 +580,9 @@ def perform_clustering():
     plt.savefig('static/emails_per_cluster_reclassified.png')
     plt.close()
 
-    # --------------------------
-    # Save Plotly Figure as JSON
-    # --------------------------
-
-    # Prepare data for Plotly with reclassified clusters
     df_emails['Cluster_Final'] = df_emails['Cluster_Reclassified']
     df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name_Reclassified']
 
-    # Create an interactive 3D scatter plot with Plotly
     fig = px.scatter_3d(
         df_emails,
         x=X_embedded[:, 0],
@@ -626,16 +595,9 @@ def perform_clustering():
 
     fig.update_traces(marker=dict(size=5))
 
-    # Convert Plotly figure to JSON
     fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-
-# Run the clustering and visualization upon starting the app
 perform_clustering()
-
-# --------------------------
-# Flask Routes and App Execution
-# --------------------------
 
 @app.route('/', methods=['GET'])
 def index():
@@ -644,7 +606,6 @@ def index():
 @app.route('/authors', methods=['GET'])
 def authors():
     global df_emails
-    # Get the authors data
     author_counts = df_emails['Author'].value_counts().reset_index()
     author_counts.columns = ['Author', 'Email_Count']
     return render_template('authors.html', authors=author_counts.to_dict(orient='records'))
@@ -654,39 +615,30 @@ def clusters():
     global df_emails, cluster_keywords, cluster_names, fig_json, X_embedded
 
     if request.method == 'POST':
-        # Get new names from the form
         for cluster_id in cluster_names.keys():
             new_name = request.form.get(f'cluster_{cluster_id}')
             if new_name:
                 cluster_names[cluster_id] = new_name.strip()
 
-        # Update cluster names in the DataFrame
         df_emails['Cluster_Name'] = df_emails['Cluster'].map(cluster_names)
         df_emails['Cluster_Name_Final'] = df_emails['Cluster_Name']
 
-        # Group by cluster name and count the number of emails per cluster
         cluster_counts = df_emails['Cluster_Name_Final'].value_counts().reset_index()
         cluster_counts.columns = ['Cluster_Name_Final', 'Count']
 
-        # Calculate the total number of emails
         total_emails = cluster_counts['Count'].sum()
 
-        # Identify the largest cluster
         largest_cluster_name = cluster_counts.loc[cluster_counts['Count'].idxmax(), 'Cluster_Name_Final']
         largest_cluster_count = cluster_counts['Count'].max()
 
         if largest_cluster_count / total_emails > 0.20:
-            # Exclude the largest cluster
             cluster_counts_filtered = cluster_counts[cluster_counts['Cluster_Name_Final'] != largest_cluster_name]
             print(f"Excluding largest cluster: {largest_cluster_name} with {largest_cluster_count} emails.")
         else:
-            # Include all clusters if no cluster exceeds the threshold
             cluster_counts_filtered = cluster_counts
 
-        # Further filter to the top 30 largest clusters
         cluster_counts_filtered = cluster_counts.nlargest(30, 'Count')
 
-        # Plot the filtered data
         plt.figure(figsize=(12, 6))
         plt.bar(cluster_counts_filtered['Cluster_Name_Final'], cluster_counts_filtered['Count'])
         plt.title('Nombre d\'Emails par Catégorie (Filtré)')
@@ -697,7 +649,6 @@ def clusters():
         plt.savefig('static/emails_per_cluster_reclassified.png')
         plt.close()
 
-        # Update the 3D scatter plot
         fig = px.scatter_3d(
             df_emails,
             x=X_embedded[:, 0],
@@ -712,7 +663,6 @@ def clusters():
 
         return redirect(url_for('clusters'))
 
-    # Prepare data for clusters
     cluster_info = []
     for cluster_id, cluster_name in cluster_names.items():
         count = len(df_emails[df_emails['Cluster'] == cluster_id])
@@ -727,9 +677,7 @@ def clusters():
 
 @app.route('/rename_clusters', methods=['GET', 'POST'])
 def rename_clusters():
-    # Redirect to /clusters since we've combined the functionality
     return redirect(url_for('clusters'))
 
 if __name__ == '__main__':
-    # Ensure Flask does not reload the app multiple times
     app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
