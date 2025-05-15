@@ -25,7 +25,7 @@ candidate_labels = [
 classifier = pipeline(
     "zero-shot-classification",
     model="facebook/bart-large-mnli",
-    device=-1
+    device=0
 )
 
 def classify_msg(file_path):
@@ -56,7 +56,7 @@ def batch_classify(folder_path):
     return pd.DataFrame(records)
 
 if __name__ == "__main__":
-    folder = "C:\\Users\\JGH\\Documents\\mail_infra\\mail_infra_mars2025"
+    folder = "/home/lestoises/mail_infra"
     df = batch_classify(folder)
     df.to_csv("zero_shot_predictions.csv", index=False)
     print("✅ Done — see zero_shot_predictions.csv")
