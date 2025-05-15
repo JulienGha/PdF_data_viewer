@@ -42,21 +42,34 @@ def batch_classify(folder_path):
             continue
         path = os.path.join(folder_path, fn)
         try:
+            msg = Message(path)
+            subject = msg.subject or ""
+            body = msg.body or ""
+            full_text = subject + "\n\n" + body
             label, score = classify_msg(path)
         except Exception as e:
             print(f"❌ Failed on {fn}: {e}")
-            label, score = None, None
-        msg = Message(path)
+            subject = ""
+            full_text = ""
+            label = None
+            score = None
         records.append({
             "FileName": fn,
-            "Subject": msg.subject or "",
+            "Subject": subject,
+            "EmailContent": full_text,
             "PredictedLabel": label,
             "Confidence": score
         })
     return pd.DataFrame(records)
 
+
 if __name__ == "__main__":
     folder = "/home/lestoises/mail_infra"
     df = batch_classify(folder)
-    df.to_csv("zero_shot_predictions.csv", index=False)
+    df.to_csv(
+        "zero_shot_predictions.csv",
+        index=False,
+        sep=";",
+        encoding="utf-8-sig"
+    )
     print("✅ Done — see zero_shot_predictions.csv")
