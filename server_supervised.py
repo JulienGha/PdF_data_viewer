@@ -17,8 +17,6 @@ clf      = joblib.load("email_classifier.joblib")
 
 app = Flask(__name__)
 
-_cached_stats = {}
-
 def load_and_classify(folder_path):
     records = []
     for fn in os.listdir(folder_path):
@@ -114,10 +112,7 @@ def generate_stats():
         "pies":     pies
     }
 
-@app.before_first_request
-def init_stats():
-    global _cached_stats
-    _cached_stats = generate_stats()
+_cached_stats = generate_stats()
 
 @app.route("/")
 def index():
