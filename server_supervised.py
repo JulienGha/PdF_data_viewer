@@ -47,9 +47,9 @@ def index():
     cat_counts = df["Category"].value_counts()
     plt.figure(figsize=(10, 6))
     cat_counts.plot(kind="bar")
-    plt.title(f"Emails per Category ({total} total)")
-    plt.xlabel("Category")
-    plt.ylabel("Count")
+    plt.title(f"Emails par catégorie")
+    plt.xlabel("Categorie")
+    plt.ylabel("Nbr email")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     cat_path = os.path.join(STATIC_IMG_DIR, "emails_per_category.png")
@@ -75,11 +75,11 @@ def index():
     color_map = {cat: cmap(i) for i, cat in enumerate(unique_cats)}
 
     colors = [color_map[top_cats.get(a, "Unknown")] for a in top_authors]
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(30, 18))
     plt.bar(top_authors, auth_counts.values, color=colors)
-    plt.title("Top 20 Email Authors (colored by their main category)")
-    plt.xlabel("Author")
-    plt.ylabel("Count")
+    plt.title("Top 20 des auteurs")
+    plt.xlabel("Auteurs")
+    plt.ylabel("Nbr email")
     plt.xticks(rotation=45, ha="right")
 
     handles = [
@@ -87,7 +87,7 @@ def index():
         for cat in unique_cats
         if cat in top_cats.values()
     ]
-    plt.legend(handles=handles, title="Main Category", bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.legend(handles=handles, title="Catégories", bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.tight_layout()
     auth_path = os.path.join(STATIC_IMG_DIR, "emails_per_author.png")
     plt.savefig(auth_path)
