@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <title>Stats Emails</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    img { max-width: 100%; margin-bottom: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>Statistiques des Emails</h1>
+  <p><strong>Total d’emails analysés :</strong> {{ total }}</p>
+
+  <h2>Nombre d’emails par catégorie</h2>
+  <img src="{{ url_for('static', filename='images/' + cat_img) }}" alt="Emails par catégorie">
+
+  <h2>Top 20 des auteurs</h2>
+  <img src="{{ url_for('static', filename='images/' + auth_img) }}" alt="Top auteurs">
+    <h2>Distribution par auteur (top 5)</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      {% for p in pies %}
+        <div style="flex: 1 1 150px; text-align: center;">
+          <img src="{{ url_for('static', filename='images/' + p.img) }}"
+               alt="Pie for {{ p.author }}" style="max-width:100%;"/>
+          <div>{{ p.author }}</div>
+        </div>
+      {% endfor %}
+    </div>
+</body>
+</html>

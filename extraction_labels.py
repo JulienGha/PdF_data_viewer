@@ -41,18 +41,27 @@ def batch_classify(folder_path):
         if not fn.lower().endswith(".msg"):
             continue
         path = os.path.join(folder_path, fn)
+
         try:
             msg = Message(path)
             subject = msg.subject or ""
+
+            if subject.strip().lower().startswith("re:"):
+                print(f"⏭️ Skipping reply: {fn}")
+                continue
+
             body = msg.body or ""
             full_text = subject + "\n\n" + body
+
             label, score = classify_msg(path)
         except Exception as e:
             print(f"❌ Failed on {fn}: {e}")
             subject = ""
+            body = ""
             full_text = ""
             label = None
             score = None
+
         records.append({
             "FileName": fn,
             "Subject": subject,
@@ -60,7 +69,9 @@ def batch_classify(folder_path):
             "PredictedLabel": label,
             "Confidence": score
         })
+
     return pd.DataFrame(records)
+
 
 
 if __name__ == "__main__":
