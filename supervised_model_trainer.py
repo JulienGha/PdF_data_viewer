@@ -4,12 +4,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 import joblib
+from charset_normalizer import from_path
+
 
 def main():
+
+    result = from_path("zero_shot_predictions.csv").best()
+    print(result.encoding)
+
     df = pd.read_csv(
         "zero_shot_predictions.csv",
         sep=";",
-        encoding="utf-8-sig"
+        encoding="iso8859_10"
     )
     print("Columns found:", df.columns.tolist())
 
