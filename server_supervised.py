@@ -20,7 +20,7 @@ app = Flask(__name__)
 def load_and_classify(folder_path):
     records = []
     for fn in os.listdir(folder_path):
-        if not fn.lower().endswith(".msg"):
+        if not fn.lower().endswith(".msg" or ".eml"):
             continue
         path = os.path.join(folder_path, fn)
         try:
